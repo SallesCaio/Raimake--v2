@@ -1,0 +1,23 @@
+.admin-login-container {
+  max-width: 400px;
+  margin: 40px auto;
+
+  .admin-logo {
+    text-align: center;
+    margin-bottom: 32px;
+    
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      color: #e884b0;
+      
+      span { color: #d4a93f; }
+    }
+    
+    p {
+      color: #a88698;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+  }
+}
