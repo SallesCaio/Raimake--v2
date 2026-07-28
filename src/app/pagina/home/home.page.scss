@@ -1,7 +1,7 @@
 // Home Page - RaiMake v1.1 (Estilo Sephora)
 .home-bg { --background: #ffffff; }
 
-.logo-home { height: 36px; border-radius: 6px; }
+.logo-home { height: 48px; border-radius: 6px; }
 
 .header-brand {
   display: flex;
@@ -10,7 +10,7 @@
   gap: 0;
 
   .header-tagline {
-    font-size: 8px;
+    font-size: 10px;
     letter-spacing: 1.2px;
     color: #a88698;
     font-weight: 500;
@@ -271,4 +271,39 @@
 // RESPONSIVIDADE
 @media (max-width: 360px) {
   .products-grid { grid-template-columns: 1fr; }
+}
+
+// CARRINHO PREVIEW BAR
+.cart-preview {
+  position: fixed;
+  bottom: 56px;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #e884b0, #d4a93f);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  z-index: 999;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.15);
+
+  .cart-preview-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    ion-icon { font-size: 22px; }
+    .cart-count { font-size: 14px; font-weight: 600; }
+  }
+
+  .cart-preview-total {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    strong { font-size: 16px; }
+    ion-icon { font-size: 18px; }
+  }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { FirebaseService, Produto } from '../../services/firebase.service';
+import { CarrinhoService } from '../../carrinho.service';
 
 @Component({
   selector: 'app-home',
@@ -10,12 +11,17 @@ import { FirebaseService, Produto } from '../../services/firebase.service';
 export class HomePage implements OnInit {
   constructor(
     public nav: NavController,
-    private fb: FirebaseService
+    private fb: FirebaseService,
+    private carrinho: CarrinhoService
   ) { }
 
   ngOnInit() {
     this.loadProdutos();
     this.loadCategorias();
+  }
+
+  ionViewWillEnter() {
+    this.atualizarCart();
   }
 
   openPage(url: string) {
@@ -37,7 +43,6 @@ export class HomePage implements OnInit {
   loadProdutos() {
     this.fb.getProdutos().subscribe(prods => {
       this.produtos = prods;
-      this.carregarSlides(prods);
     });
   }
 
@@ -62,16 +67,9 @@ export class HomePage implements OnInit {
     });
   }
 
-  carregarSlides(prods: Produto[]) {
-    if (prods.length >= 3) {
-      this.slides = prods.slice(0, 3).map(p => ({
-        title: p.nome,
-        subtitle: `R$ ${p.preco}`,
-        cta: 'Ver Produto',
-        link: '/servicos',
-        bg: 'linear-gradient(135deg, #e884b0 0%, #d4a93f 100%)'
-      }));
-    }
+  atualizarCart() {
+    this.cartQtd = this.carrinho.qtdTotal();
+    this.cartTotal = this.carrinho.total();
   }
 
   categorias: any[] = [
@@ -85,6 +83,8 @@ export class HomePage implements OnInit {
   ];
 
   produtos: Produto[] = [];
+  cartQtd = 0;
+  cartTotal = 0;
 
   slides: any[] = [
     { title: 'Nova Coleção', subtitle: 'Descubra os produtos', cta: 'Ver Coleção', link: '/servicos', bg: 'linear-gradient(135deg, #e884b0 0%, #d4a93f 100%)' },

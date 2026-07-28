@@ -137,13 +137,13 @@ ion-item.selected {
   padding: 12px 0;
 
   .menu-logo {
-    height: 48px;
-    margin-bottom: 4px;
-    border-radius: 8px;
-  }
+      height: 64px;
+      margin-bottom: 6px;
+      border-radius: 8px;
+    }
 
-  .menu-tagline {
-    font-size: 10px;
+    .menu-tagline {
+      font-size: 12px;
     letter-spacing: 1.5px;
     color: #a88698;
     font-weight: 500;
