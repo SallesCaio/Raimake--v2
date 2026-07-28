@@ -1,16 +1,21 @@
 <ion-header>
-  <ion-toolbar class="raimake-bar">
+  <ion-toolbar class="raimake-bar" style="--min-height: 60px;">
     <ion-buttons slot="start">
       <ion-menu-button auto-hide="false"></ion-menu-button>
     </ion-buttons>
-    <ion-title>Admin byRaiMake</ion-title>
+    <ion-title>
+      <div class="header-brand">
+        <img src="assets/img/logo.png" class="logo-home" alt="byRaiMake">
+        <span class="header-tagline">SUA BELEZA. SEU GLOW.</span>
+      </div>
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <div class="admin-login-container">
     <div class="admin-logo">
-      <h1>Rai<span>Make</span></h1>
+      <h1>byRai<span>Make</span></h1>
       <p>Painel Administrativo</p>
     </div>
 
@@ -19,13 +24,13 @@
     </ion-card>
 
     <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
-      <ion-item>
-        <ion-label position="floating">E-mail</ion-label>
-        <ion-input type="email" formControlName="email" placeholder="admin@raimake.com"></ion-input>
+      <ion-item class="login-input-item">
+        <ion-label position="stacked">E-mail</ion-label>
+        <ion-input type="email" formControlName="email" placeholder="admin@byraimake.com"></ion-input>
       </ion-item>
 
-      <ion-item class="ion-margin-top">
-        <ion-label position="floating">Senha</ion-label>
+      <ion-item class="login-input-item ion-margin-top">
+        <ion-label position="stacked">Senha</ion-label>
         <ion-input type="password" formControlName="senha"></ion-input>
       </ion-item>
 

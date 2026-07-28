@@ -10,14 +10,12 @@ export class AgendePage implements OnInit {
   itens: ItemCarrinho[] = [];
   total = 0;
 
-  // Número do WhatsApp (substituir pelo real, só dígitos, com DDI)
-  whatsapp = '5599999999999';
+  whatsapp = '5521970579631';
 
   constructor(private carrinho: CarrinhoService) { }
 
   ngOnInit() {}
 
-  // Atualiza a view quando entra na página
   ionViewWillEnter() {
     this.atualizar();
   }
@@ -32,14 +30,13 @@ export class AgendePage implements OnInit {
     this.atualizar();
   }
 
-  // Gera mensagem e abre o WhatsApp
   finalizarWhatsapp() {
     if (this.itens.length === 0) { return; }
-    let msg = 'Olá! Quero fazer o pedido na RaiMake:%0A%0A';
+    let msg = 'Olá! Quero fazer o pedido na byRaiMake:%0A%0A';
     this.itens.forEach((i) => {
       msg += `• ${i.nome} (x${i.qtd}) — R$ ${(i.preco * i.qtd).toFixed(2)}%0A`;
     });
-    msg += `%0ATotal: R$ ${this.total.toFixed(2)}%0A%0AObrigada!`;
+    msg += `%0ATotal: R$ ${this.total.toFixed(2)}%0A%0A*Consulte disponibilidade e área de entrega*`;
     const url = `https://wa.me/${this.whatsapp}?text=${msg}`;
     window.open(url, '_blank');
   }

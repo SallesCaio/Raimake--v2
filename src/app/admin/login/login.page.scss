@@ -7,9 +7,10 @@
     margin-bottom: 32px;
     
     h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 32px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
       color: #e884b0;
+      margin-bottom: 4px;
       
       span { color: #d4a93f; }
     }
@@ -17,7 +18,30 @@
     p {
       color: #a88698;
       font-size: 14px;
-      margin-top: 4px;
+      margin-top: 0;
     }
+  }
+}
+
+.login-input-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin-bottom: 4px;
+  
+  ion-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #2b1722;
+    margin-bottom: 4px;
+    transform: none !important;
+  }
+  
+  ion-input {
+    --padding-start: 12px;
+    --padding-end: 12px;
+    min-height: 48px;
+    border: 1px solid #e8e0e4;
+    border-radius: 8px;
+    margin-top: 4px;
   }
 }

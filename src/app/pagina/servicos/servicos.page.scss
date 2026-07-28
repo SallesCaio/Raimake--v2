@@ -37,3 +37,9 @@
   font-size: 15px;
   color: var(--ion-color-tertiary);
 }
+.sem-estoque-badge { font-size: 10px; padding: 4px 8px; }
+.disponibilidade-bar {
+  text-align: center;
+  padding: 12px 16px 80px;
+  p { font-size: 12px; color: #a88698; margin: 0; }
+}
