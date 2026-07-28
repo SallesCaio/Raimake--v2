@@ -1,0 +1,103 @@
+// Tema RaiMake v1.1 — Estilo Sephora (minimalista, elegante)
+// Paleta: Rosa suave + Branco + Dourado
+:root {
+  // Cores primárias (Sephora style)
+  --ion-color-primary: #e884b0; // Rosa suave
+  --ion-color-primary-rgb: 232,132,176;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255,255,255;
+  --ion-color-primary-shade: #cc749b;
+  --ion-color-primary-tint: #ea91b8;
+
+  // Dourado (accent)
+  --ion-color-secondary: #d4a93f;
+  --ion-color-secondary-rgb: 212,169,63;
+  --ion-color-secondary-contrast: #2b230f;
+  --ion-color-secondary-contrast-rgb: 43,35,15;
+  --ion-color-secondary-shade: #bb9537;
+  --ion-color-secondary-tint: #d8b252;
+
+  // Rosa escuro (tertiary)
+  --ion-color-tertiary: #a8456b;
+  --ion-color-tertiary-rgb: 168,69,107;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255,255,255;
+  --ion-color-tertiary-shade: #943d5e;
+  --ion-color-tertiary-tint: #b15879;
+
+  // Sucesso (verde)
+  --ion-color-success: #4caf7d;
+  --ion-color-success-rgb: 76,175,125;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255,255,255;
+  --ion-color-success-shade: #439a6e;
+  --ion-color-success-tint: #5eb88a;
+
+  // Aviso (amarelo)
+  --ion-color-warning: #f0b46f;
+  --ion-color-warning-rgb: 240,180,111;
+  --ion-color-warning-contrast: #3a2410;
+  --ion-color-warning-contrast-rgb: 58,36,16;
+  --ion-color-warning-shade: #d39e62;
+  --ion-color-warning-tint: #f2bc7d;
+
+  // Perigo (vermelho)
+  --ion-color-danger: #d46177;
+  --ion-color-danger-rgb: 212,97,119;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255,255,255;
+  --ion-color-danger-shade: #bb5569;
+  --ion-color-danger-tint: #d87284;
+
+  // Light (fundo branco/cinza claro)
+  --ion-color-light: #ffffff;
+  --ion-color-light-rgb: 255,255,255;
+  --ion-color-light-contrast: #2b1722;
+  --ion-color-light-contrast-rgb: 43,23,34;
+  --ion-color-light-shade: #f5f5f5;
+  --ion-color-light-tint: #ffffff;
+
+  // Medium (cinza)
+  --ion-color-medium: #a88698;
+  --ion-color-medium-rgb: 168,134,152;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255,255,255;
+  --ion-color-medium-shade: #937686;
+  --ion-color-medium-tint: #b394a2;
+
+  // Dark (preto/cinza escuro)
+  --ion-color-dark: #2b1722;
+  --ion-color-dark-rgb: 43,23,34;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255,255,255;
+  --ion-color-dark-shade: #26141e;
+  --ion-color-dark-tint: #402e34;
+
+  // Gradientes de marca (Sephora style)
+  --raimake-gradient: linear-gradient(135deg, #e884b0 0%, #d4a93f 100%);
+  --raimake-gradient-soft: linear-gradient(160deg, #ea91b8 0%, #ffffff 75%);
+  --raimake-gradient-btn: linear-gradient(135deg, #e884b0 0%, #a8456b 100%);
+
+  // Fontes (Sephora style)
+  --raimake-serif: 'Playfair Display', serif;
+  --raimake-sans: 'Inter', system-ui, sans-serif;
+
+  // Espaçamento (Sephora style - muito espaço branco)
+  --raimake-space-xs: 4px;
+  --raimake-space-sm: 8px;
+  --raimake-space-md: 16px;
+  --raimake-space-lg: 24px;
+  --raimake-space-xl: 32px;
+  --raimake-space-2xl: 48px;
+
+  // Border radius (Sephora style - cards arredondados)
+  --raimake-radius-sm: 8px;
+  --raimake-radius-md: 12px;
+  --raimake-radius-lg: 16px;
+  --raimake-radius-xl: 24px;
+
+  // Shadows (Sephora style - sutil)
+  --raimake-shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+  --raimake-shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+  --raimake-shadow-lg: 0 8px 32px rgba(0,0,0,0.16);
+}

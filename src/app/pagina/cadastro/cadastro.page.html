@@ -1,0 +1,26 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="raimake-bar">
+    <ion-title>Contato</ion-title>
+    <ion-menu-button slot="start"></ion-menu-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="contato-bg">
+  <section class="contato-hero">
+    <h1>Fale com a RaiMake</h1>
+    <p>Tire dúvidas, peça uma sugestão de look ou finalize seu pedido.</p>
+  </section>
+
+  <ion-list class="contato-list">
+    <ion-item button (click)="abrirWhatsapp()">
+      <ion-icon name="logo-whatsapp" slot="start" color="success"></ion-icon>
+      <ion-label>WhatsApp</ion-label>
+    </ion-item>
+    <ion-item button (click)="abrirInsta()">
+      <ion-icon name="logo-instagram" slot="start" color="tertiary"></ion-icon>
+      <ion-label>Instagram</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <p class="endereco">RaiMake — maquiagem com carinho 💄</p>
+</ion-content>

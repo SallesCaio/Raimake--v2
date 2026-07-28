@@ -1,0 +1,92 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="raimake-bar">
+    <ion-title>Rai<small>Make</small></ion-title>
+    <ion-button slot="end" fill="clear" (click)="openPage('/servicos')">
+      <ion-icon name="search-outline"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="home-bg">
+  
+  <!-- Banner Principal (Sephora style) -->
+  <section class="hero-banner">
+    <div class="banner-content">
+      <h2>Nova Coleção</h2>
+      <p>Descubra os produtos mais recentes</p>
+      <ion-button class="primary" (click)="openPage('/servicos')">
+        Ver Coleção
+      </ion-button>
+    </div>
+  </section>
+
+  <!-- Categorias Scroll (Sephora style) -->
+  <section class="categories-section">
+    <h2 class="section-title">Categorias</h2>
+    <div class="categories-scroll">
+      <div class="category-chip" *ngFor="let cat of categorias" 
+           [class.active]="cat.active"
+           (click)="selectCategory(cat)">
+        <ion-icon [name]="cat.icon"></ion-icon>
+        <span>{{ cat.nome }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Grid Produtos 2 colunas (Boticário style) -->
+  <section class="products-section">
+    <h2 class="section-title">Destaques</h2>
+    <div class="products-grid">
+      <ion-card *ngFor="let p of produtos" class="product-card" (click)="openProduct(p)">
+        <div class="card-img-wrapper">
+          <img [src]="p.img" [alt]="p.nome">
+          <div class="badge-promo" *ngIf="p.promo">{{ p.promo }}</div>
+          <div class="badge-new" *ngIf="p.isNew">Novo</div>
+        </div>
+        <div class="card-content">
+          <div class="product-name">{{ p.nome }}</div>
+          <div class="product-price">{{ p.preco | currency:'BRL' }}</div>
+          <div class="product-description">{{ p.descricao }}</div>
+        </div>
+      </ion-card>
+    </div>
+  </section>
+
+  <!-- Banner Promoção (Sephora style) -->
+  <section class="promo-banner">
+    <div class="promo-title">Leve 3 por R$ 79,90</div>
+    <div class="promo-subtitle">Escolha seus favoritos e ganhe desconto</div>
+    <ion-button class="gold" (click)="openPage('/servicos')">
+      Ver Ofertas
+    </ion-button>
+  </section>
+
+  <!-- Fale Conosco (minimalista) -->
+  <section class="contact-section">
+    <ion-button fill="clear" color="medium" expand="block" (click)="openPage('/cadastro')">
+      <ion-icon name="chatbubbles-outline" slot="start"></ion-icon>
+      Fale com a gente
+    </ion-button>
+  </section>
+
+</ion-content>
+
+<!-- Bottom Navigation (Sephora style) -->
+<div class="bottom-nav">
+  <a class="nav-item active" (click)="openPage('/home')">
+    <ion-icon name="home-outline"></ion-icon>
+    <span>Início</span>
+  </a>
+  <a class="nav-item" (click)="openPage('/servicos')">
+    <ion-icon name="bag-outline"></ion-icon>
+    <span>Catálogo</span>
+  </a>
+  <a class="nav-item" (click)="openPage('/agende')">
+    <ion-icon name="cart-outline"></ion-icon>
+    <span>Carrinho</span>
+  </a>
+  <a class="nav-item" (click)="openPage('/cadastro')">
+    <ion-icon name="person-outline"></ion-icon>
+    <span>Contato</span>
+  </a>
+</div>

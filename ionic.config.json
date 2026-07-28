@@ -1,0 +1,7 @@
+{
+  "name": "projeto-beauty",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

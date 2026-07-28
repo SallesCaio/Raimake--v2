@@ -1,0 +1,36 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="raimake-bar">
+    <ion-title>Carrinho</ion-title>
+    <ion-menu-button slot="start"></ion-menu-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="cart-bg">
+  <div *ngIf="itens.length === 0" class="vazio">
+    <ion-icon name="bag-handle-outline"></ion-icon>
+    <p>Seu carrinho está vazio.</p>
+    <ion-button fill="outline" color="secondary" routerLink="/servicos">Ver catálogo</ion-button>
+  </div>
+
+  <ion-list *ngIf="itens.length > 0">
+    <ion-item *ngFor="let i of itens" class="item-cart">
+      <ion-thumbnail slot="start">
+        <div class="thumb" [style.backgroundImage]="'url(' + i.img + ')'"></div>
+      </ion-thumbnail>
+      <ion-label>
+        <h2>{{ i.nome }}</h2>
+        <p>x{{ i.qtd }} — R$ {{ (i.preco * i.qtd).toFixed(2) }}</p>
+      </ion-label>
+      <ion-button slot="end" fill="clear" color="danger" (click)="remover(i.id)">
+        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <div *ngIf="itens.length > 0" class="rodape">
+    <div class="total">Total: <strong>R$ {{ total.toFixed(2) }}</strong></div>
+    <ion-button color="secondary" expand="block" (click)="finalizarWhatsapp()">
+      Finalizar no WhatsApp
+    </ion-button>
+  </div>
+</ion-content>

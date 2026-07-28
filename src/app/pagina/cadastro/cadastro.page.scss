@@ -1,0 +1,32 @@
+.contato-bg {
+  --background: var(--ion-color-light);
+}
+.contato-hero {
+  text-align: center;
+  padding: 40px 24px 16px;
+  h1 {
+    font-family: var(--raimake-serif);
+    font-size: 30px;
+    color: var(--ion-color-dark);
+    margin: 0 0 8px;
+  }
+  p {
+    color: var(--ion-color-medium-shade);
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}
+.contato-list {
+  max-width: 420px;
+  margin: 16px auto;
+  ion-item {
+    --border-radius: 12px;
+    margin: 8px 12px;
+    border-radius: 12px;
+  }
+}
+.endereco {
+  text-align: center;
+  color: var(--ion-color-medium);
+  margin-top: 24px;
+}

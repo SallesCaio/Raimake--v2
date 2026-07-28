@@ -1,0 +1,398 @@
+/*
+ * App Global CSS - RaiMake v1.1 (Estilo Sephora)
+ * ---------------------------------------------------------------------------- 
+ * Design system minimalista, elegante, muito espaço branco
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/* Ionic Dark Mode (desativado - estilo Sephora é light) */
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+/* @import "@ionic/angular/css/palettes/dark.system.css"; */
+
+/* ========================================
+   DESIGN SYSTEM SEPHORA (RaiMake v1.1)
+   ======================================== */
+
+/* Fontes */
+* {
+  font-family: var(--raimake-sans);
+}
+
+h1, h2, h3, ion-title {
+  font-family: var(--raimake-serif);
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+/* Cores base */
+ion-content {
+  --background: #ffffff;
+  --color: #2b1722;
+}
+
+/* ========================================
+   TOOLBAR (Sephora style - minimalista)
+   ======================================== */
+ion-toolbar.raimake-bar {
+  --background: #ffffff;
+  --color: #2b1722;
+  --border-width: 0;
+  --border-color: transparent;
+  
+  ion-title {
+    font-family: var(--raimake-serif);
+    font-weight: 700;
+    font-size: 20px;
+    color: #2b1722;
+    letter-spacing: -0.5px;
+  }
+  
+  ion-menu-button {
+    color: #2b1722;
+  }
+  
+  ion-button {
+    color: #2b1722;
+  }
+}
+
+/* ========================================
+   CARDS (Sephora style - minimalista)
+   ======================================== */
+ion-card {
+  --background: #ffffff;
+  --border-radius: var(--raimake-radius-md);
+  --box-shadow: var(--raimake-shadow-sm);
+  margin: var(--raimake-space-sm);
+  
+  &:hover {
+    --box-shadow: var(--raimake-shadow-md);
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+  }
+}
+
+/* Card imagem (aspect-ratio 1:1) */
+.card-img-wrapper {
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--raimake-radius-md) var(--raimake-radius-md) 0 0;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover img {
+    transform: scale(1.05);
+  }
+}
+
+/* Card conteúdo */
+.card-content {
+  padding: var(--raimake-space-md);
+  
+  .product-name {
+    font-family: var(--raimake-serif);
+    font-weight: 600;
+    font-size: 16px;
+    color: #2b1722;
+    margin-bottom: var(--raimake-space-xs);
+    line-height: 1.3;
+  }
+  
+  .product-price {
+    font-family: var(--raimake-sans);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--ion-color-primary);
+    margin-bottom: var(--raimake-space-xs);
+  }
+  
+  .product-description {
+    font-size: 14px;
+    color: #a88698;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* ========================================
+   BUTTONS (Sephora style)
+   ======================================== */
+ion-button {
+  --border-radius: var(--raimake-radius-md);
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+ion-button.primary {
+  --background: var(--ion-color-primary);
+  --color: #ffffff;
+  --background-hover: #cc749b;
+  --background-activated: #cc749b;
+}
+
+ion-button.secondary {
+  --background: transparent;
+  --color: var(--ion-color-primary);
+  --border-color: var(--ion-color-primary);
+  --border-width: 2px;
+  --border-style: solid;
+}
+
+ion-button.gold {
+  --background: var(--ion-color-secondary);
+  --color: #2b230f;
+  --background-hover: #bb9537;
+  --background-activated: #bb9537;
+}
+
+/* ========================================
+   BADGES (Sephora style)
+   ======================================== */
+.badge-promo {
+  position: absolute;
+  top: var(--raimake-space-sm);
+  left: var(--raimake-space-sm);
+  background: var(--ion-color-secondary);
+  color: #2b230f;
+  padding: 4px 8px;
+  border-radius: var(--raimake-radius-sm);
+  font-size: 12px;
+  font-weight: 700;
+  z-index: 10;
+}
+
+.badge-new {
+  position: absolute;
+  top: var(--raimake-space-sm);
+  right: var(--raimake-space-sm);
+  background: var(--ion-color-primary);
+  color: #ffffff;
+  padding: 4px 8px;
+  border-radius: var(--raimake-radius-sm);
+  font-size: 12px;
+  font-weight: 700;
+  z-index: 10;
+}
+
+/* ========================================
+   BOTTOM NAV (Sephora style)
+   ======================================== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-top: 1px solid #f5f5f5;
+  display: flex;
+  justify-content: space-around;
+  padding: var(--raimake-space-sm) 0;
+  z-index: 1000;
+  
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    color: #a88698;
+    font-size: 10px;
+    font-weight: 500;
+    text-decoration: none;
+    padding: var(--raimake-space-xs);
+    
+    &.active {
+      color: var(--ion-color-primary);
+    }
+    
+    ion-icon {
+      font-size: 24px;
+    }
+  }
+}
+
+/* ========================================
+   HERO CARROSSEL (Sephora style)
+   ======================================== */
+.hero-carousel {
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  border-radius: var(--raimake-radius-lg);
+  margin-bottom: var(--raimake-space-lg);
+  
+  .slide {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* ========================================
+   CATEGORIAS SCROLL (Sephora style)
+   ======================================== */
+.categories-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: var(--raimake-space-md);
+  padding: var(--raimake-space-md) 0;
+  scrollbar-width: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .category-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--raimake-space-xs);
+    min-width: 80px;
+    padding: var(--raimake-space-sm);
+    background: #f5f5f5;
+    border-radius: var(--raimake-radius-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &.active {
+      background: var(--ion-color-primary);
+      color: #ffffff;
+    }
+    
+    &:hover {
+      background: #ea91b8;
+      color: #ffffff;
+    }
+    
+    .category-icon {
+      font-size: 24px;
+    }
+    
+    .category-name {
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+  }
+}
+
+/* ========================================
+   GRID PRODUTOS (2 colunas - Boticário style)
+   ======================================== */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--raimake-space-md);
+  padding: var(--raimake-space-md);
+}
+
+/* ========================================
+   BANNER PROMOÇÕES (Sephora style)
+   ======================================== */
+.promo-banner {
+  background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-secondary) 100%);
+  border-radius: var(--raimake-radius-lg);
+  padding: var(--raimake-space-lg);
+  margin: var(--raimake-space-md);
+  color: #ffffff;
+  
+  .promo-title {
+    font-family: var(--raimake-serif);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: var(--raimake-space-sm);
+  }
+  
+  .promo-subtitle {
+    font-size: 16px;
+    margin-bottom: var(--raimake-space-md);
+    opacity: 0.9;
+  }
+  
+  .promo-cta {
+    display: inline-block;
+    background: #ffffff;
+    color: var(--ion-color-primary);
+    padding: 12px 24px;
+    border-radius: var(--raimake-radius-md);
+    font-weight: 600;
+    text-decoration: none;
+  }
+}
+
+/* ========================================
+   SEARCH BAR (Sephora style)
+   ======================================== */
+.search-bar {
+  margin: var(--raimake-space-md);
+  
+  ion-searchbar {
+    --background: #f5f5f5;
+    --border-radius: var(--raimake-radius-md);
+    --box-shadow: none;
+    --icon-color: #a88698;
+    --placeholder-color: #a88698;
+    --color: #2b1722;
+    font-size: 16px;
+  }
+}
+
+/* ========================================
+   ANIMAÇÕES (Sephora style - sutis)
+   ======================================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease;
+}
+
+/* ========================================
+   UTILITÁRIOS
+   ======================================== */
+.text-center {
+  text-align: center;
+}
+
+.text-bold {
+  font-weight: 700;
+}
+
+.text-muted {
+  color: #a88698;
+}
+
+.space-top {
+  margin-top: var(--raimake-space-lg);
+}
+
+.space-bottom {
+  margin-bottom: var(--raimake-space-lg);
+}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#f7c6da"/>
+  <circle cx="200" cy="130" r="60" fill="#e8a0bf"/>
+  <rect x="180" y="160" width="40" height="90" rx="10" fill="#c45a6b"/>
+  <text x="200" y="280" font-family="Playfair Display, serif" font-size="22" fill="#3a1f2b" text-anchor="middle">Batons</text>
+</svg>
