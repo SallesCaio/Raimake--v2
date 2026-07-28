@@ -44,7 +44,22 @@ export class ServicosPage implements OnInit {
     }
   }
 
+  semEstoque(p: Produto): boolean {
+    return p.estoque !== undefined && p.estoque <= 0;
+  }
+
   async add(p: Produto) {
+    if (this.semEstoque(p)) {
+      const t = await this.toast.create({
+        message: `${p.nome} indisponível - sem estoque`,
+        duration: 2000,
+        color: 'danger',
+        position: 'bottom',
+      });
+      await t.present();
+      return;
+    }
+
     const item: ItemCarrinho = {
       id: p.id || '',
       nome: p.nome,

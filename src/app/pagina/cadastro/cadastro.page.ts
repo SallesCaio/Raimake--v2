@@ -6,8 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./cadastro.page.scss'],
 })
 export class CadastroPage implements OnInit {
-  whatsapp = '5599999999999';
-  instagram = 'raimake';
+  whatsapp = '5521970579631';
+  instagram = 'byraimakes';
+  entrega = 'Galeão - Ilha do Governador e arredores';
 
   constructor() { }
 
@@ -16,6 +17,7 @@ export class CadastroPage implements OnInit {
   abrirWhatsapp() {
     window.open(`https://wa.me/${this.whatsapp}`, '_blank');
   }
+
   abrirInsta() {
     window.open(`https://instagram.com/${this.instagram}`, '_blank');
   }

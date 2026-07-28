@@ -78,9 +78,9 @@
   --raimake-gradient-soft: linear-gradient(160deg, #ea91b8 0%, #ffffff 75%);
   --raimake-gradient-btn: linear-gradient(135deg, #e884b0 0%, #a8456b 100%);
 
-  // Fontes (Sephora style)
-  --raimake-serif: 'Playfair Display', serif;
-  --raimake-sans: 'Inter', system-ui, sans-serif;
+  // Fontes (Beleza - Cormorant Garamond + Inter)
+    --raimake-serif: 'Cormorant Garamond', 'Playfair Display', serif;
+    --raimake-sans: 'Inter', system-ui, sans-serif;
 
   // Espaçamento (Sephora style - muito espaço branco)
   --raimake-space-xs: 4px;
