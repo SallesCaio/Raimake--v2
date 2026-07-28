@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar class="raimake-bar">
+    <ion-title>Produtos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/admin/dashboard">
+        <ion-icon name="stats-chart-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-button expand="block" routerLink="/admin/produto-form" class="ion-margin-bottom">
+    <ion-icon name="add" slot="start"></ion-icon>
+    Novo Produto
+  </ion-button>
+
+  <ion-list>
+    <ion-item *ngFor="let p of produtos" button [routerLink]="['/admin/produto-form', p.id]">
+      <ion-thumbnail slot="start">
+        <img [src]="p.imagem" [alt]="p.nome" *ngIf="p.imagem">
+      </ion-thumbnail>
+      <ion-label>
+        <h2>{{ p.nome }}</h2>
+        <p>
+          <span class="preco">R$ {{ p.preco }}</span>
+          <span class="estoque" [class.alerta]="p.estoque < 10"> • Estoque: {{ p.estoque }}</span>
+        </p>
+      </ion-label>
+      <ion-note slot="end" color="medium">R$ {{ p.preco_custo }}</ion-note>
+    </ion-item>
+
+    <ion-item *ngIf="!produtos?.length">
+      <ion-label class="ion-text-center">
+        <p>Nenhum produto cadastrado</p>
+        <ion-button fill="clear" routerLink="/admin/produto-form">Criar Primeiro Produto</ion-button>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar class="raimake-bar">
+    <ion-title>Admin RaiMake</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="admin-login-container">
+    <div class="admin-logo">
+      <h1>Rai<span>Make</span></h1>
+      <p>Painel Administrativo</p>
+    </div>
+
+    <ion-card *ngIf="erro" class="ion-padding" color="danger">
+      <ion-text color="light">{{ erro }}</ion-text>
+    </ion-card>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <ion-item>
+        <ion-label position="floating">E-mail</ion-label>
+        <ion-input type="email" formControlName="email" placeholder="admin@raimake.com"></ion-input>
+      </ion-item>
+
+      <ion-item class="ion-margin-top">
+        <ion-label position="floating">Senha</ion-label>
+        <ion-input type="password" formControlName="senha"></ion-input>
+      </ion-item>
+
+      <ion-button type="submit" expand="block" class="ion-margin-top" [disabled]="loginForm.invalid || loading">
+        <ion-icon name="lock-closed" slot="start"></ion-icon>
+        {{ loading ? 'Entrando...' : 'Entrar' }}
+      </ion-button>
+    </form>
+  </div>
+</ion-content>
