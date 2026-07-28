@@ -1,9 +1,14 @@
 <ion-header [translucent]="true">
   <ion-toolbar class="raimake-bar">
     <ion-title>Rai<small>Make</small></ion-title>
-    <ion-button slot="end" fill="clear" (click)="openPage('/servicos')">
-      <ion-icon name="search-outline"></ion-icon>
-    </ion-button>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="openPage('/servicos')">
+        <ion-icon name="search-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" (click)="openPage('/admin/login')" class="admin-btn">
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
