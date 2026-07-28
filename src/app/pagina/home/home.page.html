@@ -1,6 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar class="raimake-bar">
-    <ion-title>Rai<small>Make</small></ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button auto-hide="false"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      <img src="assets/img/logo.jpeg" class="logo-home" alt="RaiMake">
+    </ion-title>
     <ion-buttons slot="end">
       <ion-button fill="clear" (click)="openPage('/servicos')">
         <ion-icon name="search-outline"></ion-icon>
@@ -17,15 +22,15 @@
   <!-- Banner Principal (Sephora style) -->
   <section class="hero-banner">
     <div class="banner-content">
-      <h2>Nova Coleção</h2>
-      <p>Descubra os produtos mais recentes</p>
-      <ion-button class="primary" (click)="openPage('/servicos')">
-        Ver Coleção
+      <h2>{{ slides[0].title }}</h2>
+      <p>{{ slides[0].subtitle }}</p>
+      <ion-button class="primary" (click)="openPage(slides[0].link)">
+        {{ slides[0].cta }}
       </ion-button>
     </div>
   </section>
 
-  <!-- Categorias Scroll (Sephora style) -->
+  <!-- Categorias Scroll -->
   <section class="categories-section">
     <h2 class="section-title">Categorias</h2>
     <div class="categories-scroll">
@@ -38,26 +43,26 @@
     </div>
   </section>
 
-  <!-- Grid Produtos 2 colunas (Boticário style) -->
+  <!-- Grid Produtos 2 colunas -->
   <section class="products-section">
     <h2 class="section-title">Destaques</h2>
     <div class="products-grid">
       <ion-card *ngFor="let p of produtos" class="product-card" (click)="openProduct(p)">
         <div class="card-img-wrapper">
-          <img [src]="p.img" [alt]="p.nome">
+          <img [src]="p.imagem || p.img" [alt]="p.nome">
           <div class="badge-promo" *ngIf="p.promo">{{ p.promo }}</div>
           <div class="badge-new" *ngIf="p.isNew">Novo</div>
         </div>
         <div class="card-content">
           <div class="product-name">{{ p.nome }}</div>
           <div class="product-price">{{ p.preco | currency:'BRL' }}</div>
-          <div class="product-description">{{ p.descricao }}</div>
+          <div class="product-description" *ngIf="p.descricao">{{ p.descricao }}</div>
         </div>
       </ion-card>
     </div>
   </section>
 
-  <!-- Banner Promoção (Sephora style) -->
+  <!-- Banner Promoção -->
   <section class="promo-banner">
     <div class="promo-title">Leve 3 por R$ 79,90</div>
     <div class="promo-subtitle">Escolha seus favoritos e ganhe desconto</div>
@@ -66,7 +71,7 @@
     </ion-button>
   </section>
 
-  <!-- Fale Conosco (minimalista) -->
+  <!-- Fale Conosco -->
   <section class="contact-section">
     <ion-button fill="clear" color="medium" expand="block" (click)="openPage('/cadastro')">
       <ion-icon name="chatbubbles-outline" slot="start"></ion-icon>
@@ -76,7 +81,7 @@
 
 </ion-content>
 
-<!-- Bottom Navigation (Sephora style) -->
+<!-- Bottom Navigation -->
 <div class="bottom-nav">
   <a class="nav-item active" (click)="openPage('/home')">
     <ion-icon name="home-outline"></ion-icon>

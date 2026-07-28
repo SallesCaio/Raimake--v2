@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastController } from '@ionic/angular';
+import { ToastController, NavController } from '@ionic/angular';
 import { CarrinhoService, ItemCarrinho } from '../../carrinho.service';
+import { FirebaseService, Produto } from '../../services/firebase.service';
 
 @Component({
   selector: 'app-servicos',
@@ -8,30 +9,52 @@ import { CarrinhoService, ItemCarrinho } from '../../carrinho.service';
   styleUrls: ['./servicos.page.scss'],
 })
 export class ServicosPage implements OnInit {
-  // Catálogo com imagens reais enviadas (produto1..4)
-  // Nomes genéricos — ajustar conforme o conteúdo real das fotos
-  produtos = [
-    { id: 'p1', nome: 'Kit Beauty Essencial', preco: 89.9, img: '/assets/produtos/produto1.png', cat: 'Kits' },
-    { id: 'p2', nome: 'Paleta Glamour', preco: 79.9, img: '/assets/produtos/produto2.png', cat: 'Sombras' },
-    { id: 'p3', nome: 'Coleção Radiante', preco: 99.9, img: '/assets/produtos/produto3.png', cat: 'Looks' },
-    { id: 'p4', nome: 'Box Premium Make', preco: 119.9, img: '/assets/produtos/produto4.png', cat: 'Premium' },
-  ];
+  produtos: Produto[] = [];
+  categorias: string[] = [];
+  catSelecionada = 'Todos';
 
   constructor(
     private carrinho: CarrinhoService,
     private toast: ToastController,
+    private fb: FirebaseService,
+    public nav: NavController,
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.loadProdutos();
+  }
 
-  // Adiciona ao carrinho e avisa
-  async add(p: any) {
+  openPage(url: string) {
+    this.nav.navigateForward(url);
+  }
+
+  loadProdutos() {
+    this.fb.getProdutos().subscribe(prods => {
+      this.produtos = prods;
+      this.categorias = [...new Set(prods.map(p => p.categoria))];
+    });
+  }
+
+  filtrar(cat: string) {
+    this.catSelecionada = cat;
+    if (cat === 'Todos') {
+      this.fb.getProdutos().subscribe(prods => this.produtos = prods);
+    } else {
+      this.fb.getProdutosByCategoria(cat).subscribe(prods => this.produtos = prods);
+    }
+  }
+
+  async add(p: Produto) {
     const item: ItemCarrinho = {
-      id: p.id, nome: p.nome, preco: p.preco, img: p.img, qtd: 1,
+      id: p.id || '',
+      nome: p.nome,
+      preco: p.preco,
+      img: p.imagem || p.img || '',
+      qtd: 1,
     };
     this.carrinho.adicionar(item);
     const t = await this.toast.create({
-      message: `${p.nome} adicionado`,
+      message: `${p.nome} adicionado ao carrinho`,
       duration: 1200,
       color: 'success',
       position: 'bottom',

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { FirebaseService, Produto, Categoria } from '../../services/firebase.service';
-import { Observable } from 'rxjs';
+import { FirebaseService, Produto } from '../../services/firebase.service';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +10,7 @@ import { Observable } from 'rxjs';
 export class HomePage implements OnInit {
   constructor(
     public nav: NavController,
-    private firebaseService: FirebaseService
+    private fb: FirebaseService
   ) { }
 
   ngOnInit() {
@@ -19,54 +18,62 @@ export class HomePage implements OnInit {
     this.loadCategorias();
   }
 
-  // Navegação simples entre páginas
   openPage(url: string) {
     this.nav.navigateForward(url);
   }
 
-  // Abrir produto
-  openProduct(produto: Produto) {
+  openProduct(p: Produto) {
     this.nav.navigateForward('/servicos', {
-      queryParams: { id: produto.id }
+      queryParams: { id: p.id }
     });
   }
 
-  // Selecionar categoria
   selectCategory(cat: any) {
     this.categorias.forEach(c => c.active = false);
     cat.active = true;
     this.loadProdutosByCategoria(cat.nome);
   }
 
-  // Carregar produtos do Firebase
   loadProdutos() {
-    this.firebaseService.getProdutos().subscribe(produtos => {
-      this.produtos = produtos;
+    this.fb.getProdutos().subscribe(prods => {
+      this.produtos = prods;
+      this.carregarSlides(prods);
     });
   }
 
-  // Carregar produtos por categoria
-  loadProdutosByCategoria(categoria: string) {
-    if (categoria === 'Todos') {
+  loadProdutosByCategoria(cat: string) {
+    if (cat === 'Todos') {
       this.loadProdutos();
     } else {
-      this.firebaseService.getProdutosByCategoria(categoria).subscribe(produtos => {
-        this.produtos = produtos;
+      this.fb.getProdutosByCategoria(cat).subscribe(prods => {
+        this.produtos = prods;
       });
     }
   }
 
-  // Carregar categorias do Firebase
   loadCategorias() {
-    this.firebaseService.getCategorias().subscribe(categorias => {
-      this.categorias = [
-        { nome: 'Todos', icon: 'grid-outline', active: true, ativo: true },
-        ...categorias
-      ];
+    this.fb.getCategorias().subscribe(cats => {
+      if (cats.length) {
+        this.categorias = [
+          { nome: 'Todos', icon: 'grid-outline', active: true, ativo: true },
+          ...cats
+        ];
+      }
     });
   }
 
-  // Categorias (Sephora style)
+  carregarSlides(prods: Produto[]) {
+    if (prods.length >= 3) {
+      this.slides = prods.slice(0, 3).map(p => ({
+        title: p.nome,
+        subtitle: `R$ ${p.preco}`,
+        cta: 'Ver Produto',
+        link: '/servicos',
+        bg: 'linear-gradient(135deg, #e884b0 0%, #d4a93f 100%)'
+      }));
+    }
+  }
+
   categorias: any[] = [
     { nome: 'Todos', icon: 'grid-outline', active: true, ativo: true },
     { nome: 'Batons', icon: 'color-palette-outline', active: false, ativo: true },
@@ -77,79 +84,11 @@ export class HomePage implements OnInit {
     { nome: 'Skincare', icon: 'leaf-outline', active: false, ativo: true }
   ];
 
-  // Produtos reais (fotos do usuário)
-  produtos: Produto[] = [
-    {
-      id: '1',
-      nome: 'Corretivo True Skin',
-      descricao: 'Corretivo de alta cobertura',
-      preco: 49.90,
-      img: 'assets/img/CorretivoTrueSkin.jpeg',
-      promo: '-20%',
-      isNew: false,
-      categoria: 'Corretivos',
-      ativo: true,
-      createdAt: new Date()
-    },
-    {
-      id: '2',
-      nome: 'Gel Facial Preto',
-      descricao: 'Gel limpeza facial profunda',
-      preco: 39.90,
-      img: 'assets/img/GelFacialPreta.jpeg',
-      promo: undefined,
-      isNew: true,
-      categoria: 'Skincare',
-      ativo: true,
-      createdAt: new Date()
-    },
-    {
-      id: '3',
-      nome: 'Gel Facial Verde',
-      descricao: 'Gel hidratante facial',
-      preco: 45.90,
-      img: 'assets/img/GelFacialVerd.jpeg',
-      promo: undefined,
-      isNew: false,
-      categoria: 'Skincare',
-      ativo: true,
-      createdAt: new Date()
-    },
-    {
-      id: '4',
-      nome: 'Gloss Ruby Rose',
-      descricao: 'Gloss labial com brilho',
-      preco: 29.90,
-      img: 'assets/img/GlossRubyRose.jpeg',
-      promo: '-15%',
-      isNew: false,
-      categoria: 'Gloss',
-      ativo: true,
-      createdAt: new Date()
-    },
-    {
-      id: '5',
-      nome: 'Lápis de Olho',
-      descricao: 'Lápis macio e duradouro',
-      preco: 19.90,
-      img: 'assets/img/Lapis.jpeg',
-      promo: undefined,
-      isNew: false,
-      categoria: 'Sombras',
-      ativo: true,
-      createdAt: new Date()
-    },
-    {
-      id: '6',
-      nome: 'Pó Banana',
-      descricao: 'Pó compacto translúcido',
-      preco: 59.90,
-      img: 'assets/img/PodeBanana.jpeg',
-      promo: 'Novo',
-      isNew: true,
-      categoria: 'Bases',
-      ativo: true,
-      createdAt: new Date()
-    }
+  produtos: Produto[] = [];
+
+  slides: any[] = [
+    { title: 'Nova Coleção', subtitle: 'Descubra os produtos', cta: 'Ver Coleção', link: '/servicos', bg: 'linear-gradient(135deg, #e884b0 0%, #d4a93f 100%)' },
+    { title: 'Leve 3 por R$ 79,90', subtitle: 'Escolha seus favoritos', cta: 'Ver Ofertas', link: '/servicos', bg: 'linear-gradient(135deg, #d4a93f 0%, #e884b0 100%)' },
+    { title: 'Frete Grátis', subtitle: 'Em compras acima de R$ 150', cta: 'Aproveitar', link: '/servicos', bg: 'linear-gradient(135deg, #a8456b 0%, #e884b0 100%)' }
   ];
 }

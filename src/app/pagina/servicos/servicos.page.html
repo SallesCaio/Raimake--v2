@@ -1,18 +1,35 @@
 <ion-header [translucent]="true">
   <ion-toolbar class="raimake-bar">
-    <ion-title>Catálogo</ion-title>
-    <ion-menu-button slot="start"></ion-menu-button>
+    <ion-buttons slot="start">
+      <ion-menu-button auto-hide="false"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      <img src="assets/img/logo.jpeg" class="logo-small" alt="RaiMake">
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="openPage('/admin/login')">
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="cat-bg">
+  <!-- Filtro categorias -->
+  <div class="cat-filtro" *ngIf="categorias.length">
+    <ion-chip *ngFor="let c of categorias" [class.active]="catSelecionada === c" (click)="filtrar(c)">
+      {{ c }}
+    </ion-chip>
+    <ion-chip [class.active]="catSelecionada === 'Todos'" (click)="filtrar('Todos')">Todos</ion-chip>
+  </div>
+
   <ion-grid>
     <ion-row>
       <ion-col size="6" sizeMd="4" *ngFor="let p of produtos">
         <ion-card class="prod-card">
-          <div class="prod-img" [style.backgroundImage]="'url(' + p.img + ')'"></div>
+          <div class="prod-img" [style.backgroundImage]="'url(' + (p.imagem || p.img) + ')'"></div>
           <ion-card-content>
-            <ion-label class="prod-cat">{{ p.cat }}</ion-label>
+            <ion-label class="prod-cat">{{ p.categoria }}</ion-label>
             <ion-card-title class="prod-nome">{{ p.nome }}</ion-card-title>
             <div class="prod-rodape">
               <span class="prod-preco">R$ {{ p.preco.toFixed(2) }}</span>
@@ -24,5 +41,8 @@
         </ion-card>
       </ion-col>
     </ion-row>
+    <div *ngIf="!produtos.length" class="ion-text-center ion-padding">
+      <p>Nenhum produto encontrado</p>
+    </div>
   </ion-grid>
 </ion-content>

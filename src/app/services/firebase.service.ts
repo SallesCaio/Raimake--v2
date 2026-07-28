@@ -10,12 +10,16 @@ export interface Produto {
   nome: string;
   descricao: string;
   preco: number;
-  img: string;
+  img?: string;
+  imagem?: string;
   categoria: string;
   promo?: string;
   isNew?: boolean;
   ativo: boolean;
   createdAt: Date;
+  estoque?: number;
+  preco_custo?: number;
+  destaque?: boolean;
 }
 
 export interface Categoria {
@@ -23,7 +27,7 @@ export interface Categoria {
   nome: string;
   icon: string;
   ativo: boolean;
-  active?: boolean; // Added for UI state
+  active?: boolean;
 }
 
 export interface Pedido {
@@ -46,10 +50,6 @@ export class FirebaseService {
     private storage: AngularFireStorage
   ) { }
 
-  // ========================================
-  // PRODUTOS
-  // ========================================
-  
   getProdutos(): Observable<Produto[]> {
     return this.firestore.collection<Produto>('produtos', ref => 
       ref.where('ativo', '==', true).orderBy('createdAt', 'desc')
@@ -68,20 +68,12 @@ export class FirebaseService {
     ).valueChanges({ idField: 'id' });
   }
 
-  // ========================================
-  // CATEGORIAS
-  // ========================================
-  
   getCategorias(): Observable<Categoria[]> {
     return this.firestore.collection<Categoria>('categorias', ref => 
       ref.where('ativo', '==', true)
     ).valueChanges({ idField: 'id' });
   }
 
-  // ========================================
-  // PEDIDOS
-  // ========================================
-  
   createPedido(pedido: Pedido): Promise<any> {
     return this.firestore.collection('pedidos').add({
       ...pedido,
@@ -95,10 +87,6 @@ export class FirebaseService {
     ).valueChanges({ idField: 'id' });
   }
 
-  // ========================================
-  // AUTH
-  // ========================================
-  
   login(email: string, password: string): Promise<any> {
     return this.auth.signInWithEmailAndPassword(email, password);
   }
@@ -115,10 +103,6 @@ export class FirebaseService {
     return this.auth.authState;
   }
 
-  // ========================================
-  // STORAGE (Upload de imagens)
-  // ========================================
-  
   uploadImage(file: File, path: string): Promise<string> {
     const ref = this.storage.ref(path);
     const task = ref.put(file);
