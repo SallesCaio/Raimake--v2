@@ -1,15 +1,15 @@
 <ion-header [translucent]="true">
-  <ion-toolbar class="raimake-bar">
+  <ion-toolbar class="raimake-bar" style="--min-height: 60px;">
     <ion-buttons slot="start">
       <ion-menu-button auto-hide="false"></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      <img src="assets/img/logo.jpeg" class="logo-home" alt="RaiMake">
+      <div class="header-brand">
+        <img src="assets/img/logo.jpeg" class="logo-home" alt="RaiMake">
+        <span class="header-tagline">SUA BELEZA. SEU GLOW.</span>
+      </div>
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button fill="clear" (click)="openPage('/servicos')">
-        <ion-icon name="search-outline"></ion-icon>
-      </ion-button>
       <ion-button fill="clear" (click)="openPage('/admin/login')" class="admin-btn">
         <ion-icon name="shield-checkmark-outline"></ion-icon>
       </ion-button>
@@ -19,7 +19,7 @@
 
 <ion-content [fullscreen]="true" class="home-bg">
   
-  <!-- Banner Principal (Sephora style) -->
+  <!-- Banner Principal -->
   <section class="hero-banner">
     <div class="banner-content">
       <h2>{{ slides[0].title }}</h2>
@@ -59,6 +59,9 @@
           <div class="product-description" *ngIf="p.descricao">{{ p.descricao }}</div>
         </div>
       </ion-card>
+      <div *ngIf="!produtos.length" class="ion-text-center ion-padding" style="grid-column: 1 / -1;">
+        <p>Nenhum produto disponível</p>
+      </div>
     </div>
   </section>
 

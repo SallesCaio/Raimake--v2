@@ -1,10 +1,13 @@
 <ion-header [translucent]="true">
-  <ion-toolbar class="raimake-bar">
+  <ion-toolbar class="raimake-bar" style="--min-height: 60px;">
     <ion-buttons slot="start">
       <ion-menu-button auto-hide="false"></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      <img src="assets/img/logo.jpeg" class="logo-small" alt="RaiMake">
+      <div class="header-brand">
+        <img src="assets/img/logo.jpeg" class="logo-home" alt="RaiMake">
+        <span class="header-tagline">SUA BELEZA. SEU GLOW.</span>
+      </div>
     </ion-title>
     <ion-buttons slot="end">
       <ion-button fill="clear" (click)="openPage('/admin/login')">

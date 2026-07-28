@@ -1,11 +1,10 @@
 <ion-header>
   <ion-toolbar class="raimake-bar">
-    <ion-title>{{ editando ? 'Editar' : 'Novo' }} Produto</ion-title>
-    <ion-buttons slot="end">
-      <ion-button routerLink="/admin/produtos">
-        <ion-icon name="close"></ion-icon>
-      </ion-button>
+    <ion-buttons slot="start">
+      <ion-menu-button auto-hide="false"></ion-menu-button>
+      <ion-back-button defaultHref="/admin/produtos"></ion-back-button>
     </ion-buttons>
+    <ion-title>{{ editando ? 'Editar' : 'Novo' }} Produto</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -24,19 +23,16 @@
       <input type="file" #fileInput accept="image/*" (change)="onFileSelected($event)" hidden>
     </ion-item>
 
-    <!-- Nome -->
     <ion-item>
       <ion-label position="floating">Nome do Produto *</ion-label>
       <ion-input formControlName="nome" placeholder="Ex: Batom Matte Rosa"></ion-input>
     </ion-item>
 
-    <!-- Descrição -->
     <ion-item class="ion-margin-top">
       <ion-label position="floating">Descrição</ion-label>
       <ion-textarea formControlName="descricao" rows="3" placeholder="Descrição do produto..."></ion-textarea>
     </ion-item>
 
-    <!-- Preços -->
     <ion-item class="ion-margin-top">
       <ion-label position="floating">Valor de Compra (custo)</ion-label>
       <ion-input type="number" formControlName="preco_custo" placeholder="0.00" (ionChange)="calcularVenda()"></ion-input>
@@ -47,13 +43,11 @@
       <ion-input type="number" formControlName="preco" placeholder="0.00"></ion-input>
     </ion-item>
 
-    <!-- Estoque -->
     <ion-item class="ion-margin-top">
       <ion-label position="floating">Estoque</ion-label>
       <ion-input type="number" formControlName="estoque" placeholder="0"></ion-input>
     </ion-item>
 
-    <!-- Categoria -->
     <ion-item class="ion-margin-top">
       <ion-label position="floating">Categoria</ion-label>
       <ion-select formControlName="categoria">
@@ -67,25 +61,21 @@
       </ion-select>
     </ion-item>
 
-    <!-- Destaque -->
     <ion-item class="ion-margin-top">
       <ion-label>Produto em Destaque</ion-label>
       <ion-toggle formControlName="destaque"></ion-toggle>
     </ion-item>
 
-    <!-- Margem -->
     <ion-item lines="none" class="ion-margin-top">
       <ion-label>
         <p class="text-muted">* Margem de 20% aplicada automaticamente no valor de venda</p>
       </ion-label>
     </ion-item>
 
-    <!-- Erro -->
     <ion-card *ngIf="erro" color="danger" class="ion-margin-top">
       <ion-card-content>{{ erro }}</ion-card-content>
     </ion-card>
 
-    <!-- Botão salvar -->
     <div class="ion-margin-top ion-padding-bottom">
       <ion-button expand="block" type="submit" (click)="salvar()" [disabled]="produtoForm.invalid || salvando">
         <ion-icon [name]="editando ? 'save' : 'add-circle'" slot="start"></ion-icon>

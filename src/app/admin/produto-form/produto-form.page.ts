@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { finalize } from 'rxjs/operators';
 
 interface ProdutoData {
   nome: string;
@@ -106,23 +105,13 @@ export class AdminProdutoFormPage implements OnInit {
     const formData = this.produtoForm.value;
 
     try {
-      // Upload imagem se houver
       let imagemUrl = this.previewUrl || '';
       if (this.selectedFile) {
         const filePath = `produtos/${Date.now()}_${this.selectedFile.name}`;
-        const fileRef = this.storage.ref(filePath);
-        const task = this.storage.upload(filePath, this.selectedFile);
-        await task.snapshotChanges().pipe(
-          finalize(() => {
-            fileRef.getDownloadURL().subscribe(url => {
-              imagemUrl = url;
-              this.salvarDados(formData, imagemUrl);
-            });
-          })
-        ).toPromise();
-      } else {
-        this.salvarDados(formData, imagemUrl);
+        const snapshot = await this.storage.upload(filePath, this.selectedFile);
+        imagemUrl = await snapshot.ref.getDownloadURL();
       }
+      await this.salvarDados(formData, imagemUrl);
     } catch (e: any) {
       this.erro = e.message || 'Erro ao salvar produto';
       this.salvando = false;
@@ -130,6 +119,7 @@ export class AdminProdutoFormPage implements OnInit {
   }
 
   private async salvarDados(formData: any, imagemUrl: string) {
+    const now = new Date();
     const dados: ProdutoData = {
       nome: formData.nome,
       descricao: formData.descricao,
@@ -140,14 +130,15 @@ export class AdminProdutoFormPage implements OnInit {
       imagem: imagemUrl,
       destaque: formData.destaque || false,
       ativo: true,
-      updatedAt: new Date()
+      updatedAt: now,
+      createdAt: this.editando ? undefined : now
     };
 
     try {
       if (this.editando && this.produtoId) {
-        await this.firestore.doc(`produtos/${this.produtoId}`).update(dados);
+        const { createdAt, ...update } = dados;
+        await this.firestore.doc(`produtos/${this.produtoId}`).update(update);
       } else {
-        dados['createdAt'] = new Date();
         await this.firestore.collection('produtos').add(dados);
       }
       this.router.navigate(['/admin/produtos']);

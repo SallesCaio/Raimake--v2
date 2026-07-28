@@ -1,5 +1,9 @@
 <ion-header>
   <ion-toolbar class="raimake-bar">
+    <ion-buttons slot="start">
+      <ion-menu-button auto-hide="false"></ion-menu-button>
+      <ion-back-button defaultHref="/admin/dashboard"></ion-back-button>
+    </ion-buttons>
     <ion-title>Produtos</ion-title>
     <ion-buttons slot="end">
       <ion-button routerLink="/admin/dashboard">
@@ -18,7 +22,7 @@
   <ion-list>
     <ion-item *ngFor="let p of produtos" button [routerLink]="['/admin/produto-form', p.id]">
       <ion-thumbnail slot="start">
-        <img [src]="p.imagem" [alt]="p.nome" *ngIf="p.imagem">
+        <img [src]="p.imagem || p.img" [alt]="p.nome" *ngIf="p.imagem || p.img">
       </ion-thumbnail>
       <ion-label>
         <h2>{{ p.nome }}</h2>

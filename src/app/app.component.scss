@@ -121,3 +121,31 @@ ion-note {
 ion-item.selected {
   --color: var(--ion-color-primary);
 }
+
+/* Menu Header Brand */
+.menu-header-bar {
+  --background: #fef4f7;
+  --min-height: 100px;
+}
+
+.menu-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px 0;
+
+  .menu-logo {
+    height: 48px;
+    margin-bottom: 4px;
+    border-radius: 8px;
+  }
+
+  .menu-tagline {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: #a88698;
+    font-weight: 500;
+  }
+}

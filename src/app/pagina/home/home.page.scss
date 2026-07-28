@@ -1,7 +1,22 @@
 // Home Page - RaiMake v1.1 (Estilo Sephora)
 .home-bg { --background: #ffffff; }
 
-.logo-home { height: 32px; margin-top: 4px; }
+.logo-home { height: 36px; border-radius: 6px; }
+
+.header-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+
+  .header-tagline {
+    font-size: 8px;
+    letter-spacing: 1.2px;
+    color: #a88698;
+    font-weight: 500;
+    line-height: 1;
+  }
+}
 
 .menu-logo { height: 28px; margin-top: 4px; }
 

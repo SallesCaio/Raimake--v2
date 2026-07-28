@@ -3,7 +3,6 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 export interface Produto {
   id?: string;
@@ -16,7 +15,7 @@ export interface Produto {
   promo?: string;
   isNew?: boolean;
   ativo: boolean;
-  createdAt: Date;
+  createdAt?: Date;
   estoque?: number;
   preco_custo?: number;
   destaque?: boolean;
@@ -51,8 +50,8 @@ export class FirebaseService {
   ) { }
 
   getProdutos(): Observable<Produto[]> {
-    return this.firestore.collection<Produto>('produtos', ref => 
-      ref.where('ativo', '==', true).orderBy('createdAt', 'desc')
+    return this.firestore.collection<Produto>('produtos',
+      ref => ref.where('ativo', '==', true)
     ).valueChanges({ idField: 'id' });
   }
 
@@ -61,16 +60,14 @@ export class FirebaseService {
   }
 
   getProdutosByCategoria(categoria: string): Observable<Produto[]> {
-    return this.firestore.collection<Produto>('produtos', ref => 
-      ref.where('ativo', '==', true)
-         .where('categoria', '==', categoria)
-         .orderBy('createdAt', 'desc')
+    return this.firestore.collection<Produto>('produtos',
+      ref => ref.where('ativo', '==', true).where('categoria', '==', categoria)
     ).valueChanges({ idField: 'id' });
   }
 
   getCategorias(): Observable<Categoria[]> {
-    return this.firestore.collection<Categoria>('categorias', ref => 
-      ref.where('ativo', '==', true)
+    return this.firestore.collection<Categoria>('categorias',
+      ref => ref.where('ativo', '==', true)
     ).valueChanges({ idField: 'id' });
   }
 
@@ -82,8 +79,8 @@ export class FirebaseService {
   }
 
   getPedidosByUser(userId: string): Observable<Pedido[]> {
-    return this.firestore.collection<Pedido>('pedidos', ref => 
-      ref.where('userId', '==', userId).orderBy('createdAt', 'desc')
+    return this.firestore.collection<Pedido>('pedidos',
+      ref => ref.where('userId', '==', userId)
     ).valueChanges({ idField: 'id' });
   }
 
