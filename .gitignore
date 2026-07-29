@@ -70,14 +70,15 @@ testem.log
 Thumbs.db
 
 # Assets (imagens, videos, fotos de produtos)
-/src/assets/
-!src/assets/icon.png
-!src/assets/mock-data/
-
-# Public assets (não versionar fotos reais)
-/src/assets/img/*.png
+# NÃO versionar fotos reais de produtos
 /src/assets/img/*.jpg
 /src/assets/img/*.jpeg
 /src/assets/img/*.webp
 /src/assets/img/produtos/
 /src/assets/img/banners/
+/src/assets/img/WhatsApp*
+
+# Mas versionar o logo e ícones
+!src/assets/img/logo.png
+!src/assets/icon.png
+!src/assets/mock-data/
