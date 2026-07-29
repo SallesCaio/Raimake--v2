@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  // Menu RaiMake v1
+  // Menu byRaiMakes v1
   public appPages = [
     { title: 'Inicio', url: '/home', icon: 'home' },
     { title: 'Catalogo', url: '/servicos', icon: 'bag-handle' },

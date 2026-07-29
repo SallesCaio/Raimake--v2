@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { AlertController } from '@ionic/angular';
 
 interface ProdutoData {
   nome: string;
@@ -37,7 +38,8 @@ export class AdminProdutoFormPage implements OnInit {
     private firestore: AngularFirestore,
     private storage: AngularFireStorage,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private alert: AlertController
   ) {
     this.produtoForm = this.fb.group({
       nome: ['', Validators.required],
@@ -146,5 +148,27 @@ export class AdminProdutoFormPage implements OnInit {
       this.erro = e.message || 'Erro ao salvar';
       this.salvando = false;
     }
+  }
+
+  async excluir() {
+    if (!this.editando || !this.produtoId) return;
+    const a = await this.alert.create({
+      header: 'Excluir Produto',
+      message: `Tem certeza que deseja excluir este produto?`,
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Excluir', role: 'destructive',
+          handler: async () => {
+            try {
+              await this.firestore.doc(`produtos/${this.produtoId}`).delete();
+              this.router.navigate(['/admin/produtos']);
+            } catch (e: any) {
+              this.erro = e.message || 'Erro ao excluir';
+            }
+          }
+        }
+      ]
+    });
+    await a.present();
   }
 }

@@ -45,7 +45,7 @@ export class AgendePage implements OnInit {
 
     const desconto = this.clientePagamento === 'Pix' || this.clientePagamento === 'Dinheiro';
         const valorFinal = desconto ? this.total * 0.9 : this.total;
-        let msg = '🛍️ *NOVO PEDIDO - byRaiMake*%0A%0A';
+        let msg = '🛍️ *NOVO PEDIDO - bybyRaiMakess*%0A%0A';
         msg += `👤 *Cliente:* ${this.clienteNome || 'Nao informado'}%0A`;
         msg += `📞 *Tel:* ${this.clienteTelefone}%0A`;
         msg += `📍 *Endereco:* ${this.clienteEndereco || 'Nao informado'}%0A`;

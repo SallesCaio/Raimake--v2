@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-admin-produtos',
@@ -10,10 +9,7 @@ import { AlertController } from '@ionic/angular';
 export class AdminProdutosPage implements OnInit {
   produtos: any[] = [];
 
-  constructor(
-    private firestore: AngularFirestore,
-    private alert: AlertController
-  ) {}
+  constructor(private firestore: AngularFirestore) {}
 
   ngOnInit() {
     this.carregar();
@@ -25,22 +21,5 @@ export class AdminProdutosPage implements OnInit {
     ).valueChanges({ idField: 'id' }).subscribe(prods => {
       this.produtos = prods;
     });
-  }
-
-  async excluir(id: string, nome: string) {
-    const a = await this.alert.create({
-      header: 'Excluir Produto',
-      message: `Tem certeza que deseja excluir <strong>${nome}</strong>?`,
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        { text: 'Excluir', role: 'destructive',
-          handler: async () => {
-            await this.firestore.doc(`produtos/${id}`).delete();
-            this.carregar();
-          }
-        }
-      ]
-    });
-    await a.present();
   }
 }

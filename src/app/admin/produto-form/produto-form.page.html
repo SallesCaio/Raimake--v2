@@ -4,13 +4,20 @@
       <ion-menu-button auto-hide="false"></ion-menu-button>
       <ion-back-button defaultHref="/admin/produtos"></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ editando ? 'Editar' : 'Novo' }} Produto</ion-title>
+    <ion-title>
+      <div class="header-brand">
+        <img src="assets/img/logo.png" class="logo-home" alt="byRaiMakes">
+        <div class="header-brand-text">
+          <span class="brand-name"><span class="brand-pink">byRai</span><span class="brand-gold">Makes</span></span>
+          <span class="header-tagline">SUA BELEZA. SEU GLOW.</span>
+        </div>
+      </div>
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <form [formGroup]="produtoForm">
-    <!-- Imagem -->
     <ion-item class="ion-margin-bottom">
       <ion-label position="stacked">Foto do Produto</ion-label>
       <div class="image-upload" (click)="fileInput.click()">
@@ -64,12 +71,6 @@
       <ion-toggle formControlName="destaque"></ion-toggle>
     </ion-item>
 
-    <ion-item lines="none" class="ion-margin-top">
-      <ion-label>
-        <p class="text-muted">* Margem de 20% aplicada automaticamente no valor de venda</p>
-      </ion-label>
-    </ion-item>
-
     <ion-card *ngIf="erro" color="danger" class="ion-margin-top">
       <ion-card-content>{{ erro }}</ion-card-content>
     </ion-card>
@@ -79,6 +80,15 @@
         <ion-icon [name]="editando ? 'save' : 'add-circle'" slot="start"></ion-icon>
         {{ salvando ? 'Salvando...' : (editando ? 'Atualizar Produto' : 'Criar Produto') }}
       </ion-button>
+
+      <ion-button expand="block" color="danger" fill="outline" class="ion-margin-top" *ngIf="editando" (click)="excluir()">
+        <ion-icon name="trash-outline" slot="start"></ion-icon>
+        Excluir Produto
+      </ion-button>
     </div>
   </form>
 </ion-content>
+
+<div class="footer-bar">
+  <p>byRaiMakes — SUA BELEZA. SEU GLOW. — (21) 97057-9631</p>
+</div>
