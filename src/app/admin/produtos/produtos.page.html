@@ -39,6 +39,9 @@
           <span class="estoque" [class.alerta]="p.estoque < 10"> • Estoque: {{ p.estoque }}</span>
         </p>
       </ion-label>
+      <ion-button slot="end" fill="clear" color="danger" (click)="$event.stopPropagation(); excluir(p.id, p.nome)">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
       <ion-note slot="end" color="medium">R$ {{ p.preco_custo }}</ion-note>
     </ion-item>
 

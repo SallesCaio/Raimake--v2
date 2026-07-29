@@ -97,8 +97,8 @@
         </ion-item>
       </ion-list>
 
-      <div class="checkout-preview" *ngIf="clientePagamento === 'Pix'">
-        <p class="pix-desconto">🎉 Pix: 10% de desconto!</p>
+      <div class="checkout-preview" *ngIf="clientePagamento === 'Pix' || clientePagamento === 'Dinheiro'">
+              <p class="pix-desconto">🎉 {{ clientePagamento }}: 10% de desconto!</p>
         <div class="checkout-total">
           <span>Subtotal:</span>
           <span>R$ {{ total.toFixed(2) }}</span>

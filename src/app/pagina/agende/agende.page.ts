@@ -43,20 +43,21 @@ export class AgendePage implements OnInit {
   confirmarPedido() {
     if (!this.clienteTelefone || this.itens.length === 0) return;
 
-    const valorFinal = this.clientePagamento === 'Pix' ? this.total * 0.9 : this.total;
-    let msg = '🛍️ *NOVO PEDIDO - byRaiMake*%0A%0A';
-    msg += `👤 *Cliente:* ${this.clienteNome || 'Nao informado'}%0A`;
-    msg += `📞 *Tel:* ${this.clienteTelefone}%0A`;
-    msg += `📍 *Endereco:* ${this.clienteEndereco || 'Nao informado'}%0A`;
-    msg += `💳 *Pagamento:* ${this.clientePagamento}%0A%0A`;
-    msg += '📋 *Itens:*%0A';
-    this.itens.forEach((i) => {
-      msg += `  • ${i.nome} (x${i.qtd}) — R$ ${(i.preco * i.qtd).toFixed(2)}%0A`;
-    });
-    msg += `%0A💰 *Subtotal:* R$ ${this.total.toFixed(2)}%0A`;
-    if (this.clientePagamento === 'Pix') {
-      msg += `🎉 *Desconto Pix (10%):* -R$ ${(this.total * 0.1).toFixed(2)}%0A`;
-    }
+    const desconto = this.clientePagamento === 'Pix' || this.clientePagamento === 'Dinheiro';
+        const valorFinal = desconto ? this.total * 0.9 : this.total;
+        let msg = '🛍️ *NOVO PEDIDO - byRaiMake*%0A%0A';
+        msg += `👤 *Cliente:* ${this.clienteNome || 'Nao informado'}%0A`;
+        msg += `📞 *Tel:* ${this.clienteTelefone}%0A`;
+        msg += `📍 *Endereco:* ${this.clienteEndereco || 'Nao informado'}%0A`;
+        msg += `💳 *Pagamento:* ${this.clientePagamento}%0A%0A`;
+        msg += '📋 *Itens:*%0A';
+        this.itens.forEach((i) => {
+          msg += `  • ${i.nome} (x${i.qtd}) — R$ ${(i.preco * i.qtd).toFixed(2)}%0A`;
+        });
+        msg += `%0A💰 *Subtotal:* R$ ${this.total.toFixed(2)}%0A`;
+        if (desconto) {
+          msg += `🎉 *Desconto ${this.clientePagamento} (10%):* -R$ ${(this.total * 0.1).toFixed(2)}%0A`;
+        }
     msg += `✅ *Total a pagar:* R$ ${valorFinal.toFixed(2)}%0A%0A`;
     msg += '_Consulte disponibilidade e area de entrega_';
 
