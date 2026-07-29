@@ -340,13 +340,49 @@
 .footer-bar {
   background: #fef4f7;
   text-align: center;
-  padding: 14px 16px 72px;
+  padding: 24px 20px 72px;
   border-top: 1px solid #f0e8ec;
-  p {
-    font-size: 11px;
-    color: #a88698;
-    margin: 0;
-    line-height: 1.5;
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 16px;
+
+    .footer-logo { height: 36px; border-radius: 6px; }
+    .footer-brand-text {
+      display: flex; flex-direction: column; text-align: left;
+      .footer-name { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: #2b1722; }
+      .footer-tagline { font-size: 10px; letter-spacing: 1px; color: #a88698; }
+    }
+  }
+
+  .footer-social {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 16px;
+
+    .social-icon {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      transition: all 0.3s;
+      text-decoration: none;
+
+      &.whatsapp { background: #25d366; color: #fff; }
+      &.instagram { background: #e4405f; color: #fff; }
+      &.email { background: #e884b0; color: #fff; }
+
+      &:hover { transform: scale(1.1); opacity: 0.9; }
+    }
+  }
+
+  .footer-info {
+    p { font-size: 12px; color: #a88698; margin: 4px 0; }
+    .footer-copy { font-size: 10px; color: #c4b0bb; }
   }
 }
 
