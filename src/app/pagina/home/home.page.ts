@@ -75,8 +75,10 @@ export class HomePage implements OnInit {
     { nome: 'Todos', icon: 'grid-outline', active: true, ativo: true },
     { nome: 'Cabelo', icon: 'cut-outline', active: false, ativo: true },
     { nome: 'Olhos', icon: 'eye-outline', active: false, ativo: true },
+    { nome: 'Boca', icon: 'color-palette-outline', active: false, ativo: true },
     { nome: 'Pele', icon: 'leaf-outline', active: false, ativo: true },
     { nome: 'Rosto', icon: 'sparkles-outline', active: false, ativo: true },
+    { nome: 'Corpo', icon: 'accessibility-outline', active: false, ativo: true },
     { nome: 'Acessórios', icon: 'bag-handle-outline', active: false, ativo: true }
   ];
 

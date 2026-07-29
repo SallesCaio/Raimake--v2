@@ -125,3 +125,41 @@
     </ion-content>
   </ng-template>
 </ion-modal>
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a class="nav-item" (click)="openPage('/home')">
+    <ion-icon name="home-outline"></ion-icon>
+    <span>Inicio</span>
+  </a>
+  <a class="nav-item" (click)="openPage('/servicos')">
+    <ion-icon name="bag-outline"></ion-icon>
+    <span>Catalogo</span>
+  </a>
+  <a class="nav-item active" (click)="openPage('/agende')">
+    <ion-icon name="cart-outline"></ion-icon>
+    <span>Carrinho</span>
+  </a>
+  <a class="nav-item" (click)="openPage('/cadastro')">
+    <ion-icon name="person-outline"></ion-icon>
+    <span>Contato</span>
+  </a>
+</div>
+
+<div class="footer-bar">
+  <div class="footer-brand">
+    <img src="assets/img/logo.png" class="footer-logo" alt="byRaiMakes">
+    <div class="footer-brand-text">
+      <span class="footer-name">byRaiMakes</span>
+      <span class="footer-tagline">SUA BELEZA. SEU GLOW.</span>
+    </div>
+  </div>
+  <div class="footer-social">
+    <a href="https://wa.me/5521970579631" target="_blank" class="social-icon whatsapp"><ion-icon name="logo-whatsapp"></ion-icon></a>
+    <a href="https://instagram.com/byraimakes" target="_blank" class="social-icon instagram"><ion-icon name="logo-instagram"></ion-icon></a>
+    <a href="mailto:contato@byraimakes.com" class="social-icon email"><ion-icon name="mail-outline"></ion-icon></a>
+  </div>
+  <div class="footer-info">
+    <p>Entrega: Galeao - Ilha do Governador e arredores</p>
+    <p class="footer-copy">&copy; 2026 byRaiMakes — Todos os direitos reservados</p>
+  </div>
+</div>
