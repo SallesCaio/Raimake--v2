@@ -336,6 +336,26 @@
   .products-grid { grid-template-columns: 1fr; }
 }
 
+// PRODUCT MODAL
+.modal-img-wrapper {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  .modal-img { width: 100%; height: 100%; object-fit: cover; }
+}
+.modal-body {
+  .modal-title { font-family: var(--raimake-serif); font-size: 24px; color: #2b1722; margin: 0 0 4px; }
+  .modal-categoria { font-size: 12px; color: #d4a93f; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .modal-descricao { font-size: 15px; color: #666; line-height: 1.5; }
+  .modal-preco {
+    display: flex; align-items: center; gap: 12px; margin: 16px 0;
+    .modal-valor { font-size: 28px; font-weight: 700; color: #e884b0; }
+    .modal-estoque { font-size: 12px; color: #eb445a; font-weight: 600; }
+  }
+}
+
 // CARRINHO PREVIEW BAR
 .cart-preview {
   position: fixed;

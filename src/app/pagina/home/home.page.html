@@ -97,6 +97,30 @@
   </section>
 </ion-content>
 
+<!-- Product Modal -->
+<ion-modal [isOpen]="showModal" (didDismiss)="showModal = false" [initialBreakpoint]="0.8" [breakpoints]="[0.5, 0.8, 1]">
+  <ng-template>
+    <ion-content class="ion-padding" *ngIf="produtoModal as p">
+      <div class="modal-img-wrapper">
+        <img [src]="p.imagem || p.img" [alt]="p.nome" class="modal-img">
+      </div>
+      <div class="modal-body">
+        <h2 class="modal-title">{{ p.nome }}</h2>
+        <div class="modal-categoria">{{ p.categoria }}</div>
+        <p class="modal-descricao">{{ p.descricao }}</p>
+        <div class="modal-preco">
+          <span class="modal-valor">{{ p.preco | currency:'BRL' }}</span>
+          <span class="modal-estoque" *ngIf="p.estoque !== undefined && p.estoque <= 0" color="danger">Indisponível</span>
+        </div>
+        <ion-button expand="block" class="ion-margin-top" (click)="addToCartModal(p)" [disabled]="p.estoque !== undefined && p.estoque <= 0">
+          <ion-icon name="cart-outline" slot="start"></ion-icon>
+          Adicionar ao Carrinho
+        </ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
 <!-- Carrinho Preview -->
 <div class="cart-preview" *ngIf="cartQtd > 0" (click)="openPage('/agende')">
   <div class="cart-preview-info">

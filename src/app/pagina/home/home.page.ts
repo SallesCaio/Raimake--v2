@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { FirebaseService, Produto } from '../../services/firebase.service';
-import { CarrinhoService } from '../../carrinho.service';
+import { CarrinhoService, ItemCarrinho } from '../../carrinho.service';
 
 @Component({
   selector: 'app-home',
@@ -29,9 +29,8 @@ export class HomePage implements OnInit {
   }
 
   openProduct(p: Produto) {
-    this.nav.navigateForward('/servicos', {
-      queryParams: { id: p.id }
-    });
+    this.produtoModal = p;
+    this.showModal = true;
   }
 
   selectCategory(cat: any) {
@@ -93,6 +92,8 @@ export class HomePage implements OnInit {
   searchText = '';
   searchResults: Produto[] = [];
   showSearch = false;
+  showModal = false;
+  produtoModal: Produto | null = null;
 
   toggleSearch() {
     this.showSearch = !this.showSearch;
@@ -117,5 +118,18 @@ export class HomePage implements OnInit {
     this.searchText = '';
     this.searchResults = [];
     this.openProduct(p);
+  }
+
+  addToCartModal(p: Produto) {
+    const item: ItemCarrinho = {
+      id: p.id || '',
+      nome: p.nome,
+      preco: p.preco,
+      img: p.imagem || p.img || '',
+      qtd: 1,
+    };
+    this.carrinho.adicionar(item);
+    this.atualizarCart();
+    this.showModal = false;
   }
 }
