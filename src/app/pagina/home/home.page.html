@@ -13,29 +13,12 @@
       </div>
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button fill="clear" (click)="toggleSearch()">
-        <ion-icon name="search-outline"></ion-icon>
-      </ion-button>
       <ion-button fill="clear" (click)="openPage('/admin/login')" class="admin-btn">
         <ion-icon name="shield-checkmark-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
-<!-- Search Bar -->
-<div class="search-bar" *ngIf="showSearch">
-  <ion-searchbar [(ngModel)]="searchText" (ionInput)="onSearchInput()" placeholder="Buscar produtos..." autocomplete="off" autocorrect="off"></ion-searchbar>
-  <div class="search-results" *ngIf="searchResults.length">
-    <div class="search-item" *ngFor="let r of searchResults" (click)="selectSearchResult(r)">
-      <img [src]="r.imagem || r.img" class="search-thumb">
-      <div class="search-info">
-        <span class="search-name">{{ r.nome }}</span>
-        <span class="search-price">R$ {{ r.preco }}</span>
-      </div>
-    </div>
-  </div>
-</div>
 
 <ion-content [fullscreen]="true" class="home-bg">
   <section class="hero-banner">
@@ -82,7 +65,7 @@
   </section>
 
   <section class="promo-banner">
-    <div class="promo-title">10% de desconto no pix ou dinheiro</div>
+    <div class="promo-title">Leve 3 por R$ 79,90</div>
     <div class="promo-subtitle">Escolha seus favoritos e ganhe desconto</div>
     <ion-button class="gold" (click)="openPage('/servicos')">
       Ver Ofertas
@@ -162,15 +145,9 @@
     </div>
   </div>
   <div class="footer-social">
-    <a href="https://wa.me/5521970579631" target="_blank" class="social-icon whatsapp">
-      <ion-icon name="logo-whatsapp"></ion-icon>
-    </a>
-    <a href="https://instagram.com/byraimakes" target="_blank" class="social-icon instagram">
-      <ion-icon name="logo-instagram"></ion-icon>
-    </a>
-    <a href="mailto:contato@byraimakes.com" class="social-icon email">
-      <ion-icon name="mail-outline"></ion-icon>
-    </a>
+    <a href="https://wa.me/5521970579631" target="_blank" class="social-icon whatsapp"><ion-icon name="logo-whatsapp"></ion-icon></a>
+    <a href="https://instagram.com/byraimakes" target="_blank" class="social-icon instagram"><ion-icon name="logo-instagram"></ion-icon></a>
+    <a href="mailto:contato@byraimakes.com" class="social-icon email"><ion-icon name="mail-outline"></ion-icon></a>
   </div>
   <div class="footer-info">
     <p>Entrega: Galeão - Ilha do Governador e arredores</p>

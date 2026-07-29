@@ -95,6 +95,11 @@ export class HomePage implements OnInit {
   showModal = false;
   produtoModal: Produto | null = null;
 
+  openProduct(p: Produto) {
+    this.produtoModal = p;
+    this.showModal = true;
+  }
+
   addToCartModal(p: Produto) {
     const item: ItemCarrinho = {
       id: p.id || '',
