@@ -7,7 +7,7 @@
       <div class="header-brand">
               <img src="assets/img/logo.png" class="logo-home" alt="byRaiMake">
               <div class="header-brand-text">
-                <span class="brand-name">byRaiMake</span>
+                <span class="brand-name"><span class="brand-pink">byRai</span><span class="brand-gold">Make</span></span>
                 <span class="header-tagline">SUA BELEZA. SEU GLOW.</span>
               </div>
             </div>
@@ -54,6 +54,18 @@
       </ion-grid>
 
       <div class="disponibilidade-bar">
-        <p>* Consulte disponibilidade. Produtos sujeitos a falta de estoque.</p>
+              <p>* Consulte disponibilidade. Produtos sujeitos a falta de estoque.</p>
+            </div>
+          </ion-content>
+
+      <!-- Carrinho Preview -->
+      <div class="cart-preview" *ngIf="cartQtd > 0" (click)="openPage('/agende')">
+        <div class="cart-preview-info">
+          <ion-icon name="cart-outline"></ion-icon>
+          <span class="cart-count">{{ cartQtd }} {{ cartQtd === 1 ? 'item' : 'itens' }}</span>
+        </div>
+        <div class="cart-preview-total">
+          <span>Total previsto: <strong>R$ {{ cartTotal.toFixed(2) }}</strong></span>
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
       </div>
-    </ion-content>

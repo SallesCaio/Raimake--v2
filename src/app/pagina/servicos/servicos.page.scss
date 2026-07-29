@@ -43,3 +43,19 @@
   padding: 12px 16px 80px;
   p { font-size: 12px; color: #a88698; margin: 0; }
 }
+// CARRINHO PREVIEW
+.cart-preview {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(135deg, #e884b0, #d4a93f); color: #fff;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px; z-index: 999; cursor: pointer;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.15);
+  .cart-preview-info { display: flex; align-items: center; gap: 8px;
+    ion-icon { font-size: 22px; }
+    .cart-count { font-size: 14px; font-weight: 600; }
+  }
+  .cart-preview-total { display: flex; align-items: center; gap: 6px; font-size: 14px;
+    strong { font-size: 16px; }
+    ion-icon { font-size: 18px; }
+  }
+}

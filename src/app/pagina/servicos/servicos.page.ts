@@ -12,6 +12,8 @@ export class ServicosPage implements OnInit {
   produtos: Produto[] = [];
   categorias: string[] = [];
   catSelecionada = 'Todos';
+  cartQtd = 0;
+  cartTotal = 0;
 
   constructor(
     private carrinho: CarrinhoService,
@@ -22,6 +24,10 @@ export class ServicosPage implements OnInit {
 
   ngOnInit() {
     this.loadProdutos();
+  }
+
+  ionViewWillEnter() {
+    this.atualizarCart();
   }
 
   openPage(url: string) {
@@ -48,10 +54,15 @@ export class ServicosPage implements OnInit {
     return p.estoque !== undefined && p.estoque <= 0;
   }
 
+  atualizarCart() {
+    this.cartQtd = this.carrinho.qtdTotal();
+    this.cartTotal = this.carrinho.total();
+  }
+
   async add(p: Produto) {
     if (this.semEstoque(p)) {
       const t = await this.toast.create({
-        message: `${p.nome} indisponível - sem estoque`,
+        message: `${p.nome} indisponivel - sem estoque`,
         duration: 2000,
         color: 'danger',
         position: 'bottom',
@@ -68,6 +79,7 @@ export class ServicosPage implements OnInit {
       qtd: 1,
     };
     this.carrinho.adicionar(item);
+    this.atualizarCart();
     const t = await this.toast.create({
       message: `${p.nome} adicionado ao carrinho`,
       duration: 1200,

@@ -33,3 +33,28 @@
   color: var(--ion-color-dark);
   margin-bottom: 8px;
 }
+
+// CHECKOUT MODAL
+.checkout-resumo {
+  background: #fef4f7;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  h3 { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #2b1722; margin: 0 0 12px; }
+}
+.checkout-item {
+  display: flex; justify-content: space-between; padding: 4px 0;
+  font-size: 14px; color: #555;
+}
+.checkout-total {
+  display: flex; justify-content: space-between; padding: 8px 0 0;
+  border-top: 1px solid #e8e0e4; margin-top: 8px;
+  font-size: 15px;
+  &.desconto { border: none; margin: 0; color: #2e7d32; }
+  &.final { border-top: 2px solid #e884b0; font-size: 17px; }
+}
+.pix-desconto {
+  background: #e8f5e9; color: #2e7d32;
+  text-align: center; padding: 8px; border-radius: 8px;
+  font-weight: 600; font-size: 14px; margin: 12px 0;
+}

@@ -1,7 +1,17 @@
 <ion-header [translucent]="true">
   <ion-toolbar class="raimake-bar">
-    <ion-title>Carrinho</ion-title>
-    <ion-menu-button slot="start"></ion-menu-button>
+    <ion-buttons slot="start">
+      <ion-menu-button auto-hide="false"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      <div class="header-brand">
+        <img src="assets/img/logo.png" class="logo-home" alt="byRaiMake">
+        <div class="header-brand-text">
+          <span class="brand-name"><span class="brand-pink">byRai</span><span class="brand-gold">Make</span></span>
+          <span class="header-tagline">SUA BELEZA. SEU GLOW.</span>
+        </div>
+      </div>
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -29,8 +39,84 @@
 
   <div *ngIf="itens.length > 0" class="rodape">
     <div class="total">Total: <strong>R$ {{ total.toFixed(2) }}</strong></div>
-    <ion-button color="secondary" expand="block" (click)="finalizarWhatsapp()">
+    <ion-button color="secondary" expand="block" (click)="abrirCheckout()">
       Finalizar no WhatsApp
     </ion-button>
   </div>
 </ion-content>
+
+<!-- Modal Checkout -->
+<ion-modal [isOpen]="showCheckout" (didDismiss)="showCheckout = false">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Finalizar Pedido</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="showCheckout = false">
+            <ion-icon name="close"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <div class="checkout-resumo">
+        <h3>Resumo do Pedido</h3>
+        <div *ngFor="let i of itens" class="checkout-item">
+          <span>{{ i.nome }} x{{ i.qtd }}</span>
+          <span>R$ {{ (i.preco * i.qtd).toFixed(2) }}</span>
+        </div>
+        <div class="checkout-total">
+          <strong>Total:</strong>
+          <strong>R$ {{ total.toFixed(2) }}</strong>
+        </div>
+      </div>
+
+      <ion-list class="ion-margin-top">
+        <ion-item>
+          <ion-label position="stacked">Seu telefone (WhatsApp) *</ion-label>
+          <ion-input [(ngModel)]="clienteTelefone" placeholder="(21) 99999-9999"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Nome completo</ion-label>
+          <ion-input [(ngModel)]="clienteNome" placeholder="Seu nome"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Endereço de entrega</ion-label>
+          <ion-input [(ngModel)]="clienteEndereco" placeholder="Rua, número, bairro"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Forma de pagamento</ion-label>
+          <ion-select [(ngModel)]="clientePagamento">
+            <ion-select-option value="Pix">Pix (10% desconto)</ion-select-option>
+            <ion-select-option value="Dinheiro">Dinheiro</ion-select-option>
+            <ion-select-option value="Cartão">Cartão</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+
+      <div class="checkout-preview" *ngIf="clientePagamento === 'Pix'">
+        <p class="pix-desconto">🎉 Pix: 10% de desconto!</p>
+        <div class="checkout-total">
+          <span>Subtotal:</span>
+          <span>R$ {{ total.toFixed(2) }}</span>
+        </div>
+        <div class="checkout-total desconto">
+          <span>Desconto (10%):</span>
+          <span>- R$ {{ (total * 0.1).toFixed(2) }}</span>
+        </div>
+        <div class="checkout-total final">
+          <strong>Total com desconto:</strong>
+          <strong>R$ {{ (total * 0.9).toFixed(2) }}</strong>
+        </div>
+      </div>
+
+      <ion-button expand="block" class="ion-margin-top" (click)="confirmarPedido()" [disabled]="!clienteTelefone">
+        <ion-icon name="logo-whatsapp" slot="start"></ion-icon>
+        Confirmar Pedido via WhatsApp
+      </ion-button>
+    </ion-content>
+  </ng-template>
+</ion-modal>

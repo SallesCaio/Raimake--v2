@@ -9,8 +9,13 @@ import { CarrinhoService, ItemCarrinho } from '../../carrinho.service';
 export class AgendePage implements OnInit {
   itens: ItemCarrinho[] = [];
   total = 0;
-
   whatsapp = '5521970579631';
+
+  showCheckout = false;
+  clienteTelefone = '';
+  clienteNome = '';
+  clienteEndereco = '';
+  clientePagamento = 'Pix';
 
   constructor(private carrinho: CarrinhoService) { }
 
@@ -30,14 +35,36 @@ export class AgendePage implements OnInit {
     this.atualizar();
   }
 
-  finalizarWhatsapp() {
-    if (this.itens.length === 0) { return; }
-    let msg = 'Olá! Quero fazer o pedido na byRaiMake:%0A%0A';
+  abrirCheckout() {
+    if (this.itens.length === 0) return;
+    this.showCheckout = true;
+  }
+
+  confirmarPedido() {
+    if (!this.clienteTelefone || this.itens.length === 0) return;
+
+    const valorFinal = this.clientePagamento === 'Pix' ? this.total * 0.9 : this.total;
+    let msg = '🛍️ *NOVO PEDIDO - byRaiMake*%0A%0A';
+    msg += `👤 *Cliente:* ${this.clienteNome || 'Nao informado'}%0A`;
+    msg += `📞 *Tel:* ${this.clienteTelefone}%0A`;
+    msg += `📍 *Endereco:* ${this.clienteEndereco || 'Nao informado'}%0A`;
+    msg += `💳 *Pagamento:* ${this.clientePagamento}%0A%0A`;
+    msg += '📋 *Itens:*%0A';
     this.itens.forEach((i) => {
-      msg += `• ${i.nome} (x${i.qtd}) — R$ ${(i.preco * i.qtd).toFixed(2)}%0A`;
+      msg += `  • ${i.nome} (x${i.qtd}) — R$ ${(i.preco * i.qtd).toFixed(2)}%0A`;
     });
-    msg += `%0ATotal: R$ ${this.total.toFixed(2)}%0A%0A*Consulte disponibilidade e área de entrega*`;
+    msg += `%0A💰 *Subtotal:* R$ ${this.total.toFixed(2)}%0A`;
+    if (this.clientePagamento === 'Pix') {
+      msg += `🎉 *Desconto Pix (10%):* -R$ ${(this.total * 0.1).toFixed(2)}%0A`;
+    }
+    msg += `✅ *Total a pagar:* R$ ${valorFinal.toFixed(2)}%0A%0A`;
+    msg += '_Consulte disponibilidade e area de entrega_';
+
     const url = `https://wa.me/${this.whatsapp}?text=${msg}`;
     window.open(url, '_blank');
+
+    this.carrinho.limpar();
+    this.showCheckout = false;
+    this.atualizar();
   }
 }

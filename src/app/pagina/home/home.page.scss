@@ -1,33 +1,37 @@
 // Home Page - RaiMake v1.1 (Estilo Sephora)
 .home-bg { --background: #ffffff; }
 
-.logo-home { height: 48px; border-radius: 6px; }
+.logo-home { height: 28px; border-radius: 4px; }
 
 .header-brand {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 
   .header-brand-text {
     display: flex;
     flex-direction: column;
     gap: 0;
+    white-space: nowrap;
 
     .brand-name {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 18px;
+      font-size: 15px;
       font-weight: 600;
-      color: #2b1722;
       line-height: 1.1;
+
+      .brand-pink { color: #e884b0; }
+      .brand-gold { color: #d4a93f; }
     }
 
     .header-tagline {
-      font-size: 9px;
-      letter-spacing: 1.2px;
+      font-size: 8px;
+      letter-spacing: 1px;
       color: #a88698;
       font-weight: 500;
       line-height: 1;
+      white-space: nowrap;
     }
   }
 }
