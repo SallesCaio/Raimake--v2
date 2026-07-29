@@ -68,3 +68,16 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Assets (imagens, videos, fotos de produtos)
+/src/assets/
+!src/assets/icon.png
+!src/assets/mock-data/
+
+# Public assets (não versionar fotos reais)
+/src/assets/img/*.png
+/src/assets/img/*.jpg
+/src/assets/img/*.jpeg
+/src/assets/img/*.webp
+/src/assets/img/produtos/
+/src/assets/img/banners/
