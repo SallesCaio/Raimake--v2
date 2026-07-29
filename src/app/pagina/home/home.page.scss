@@ -336,6 +336,20 @@
   .products-grid { grid-template-columns: 1fr; }
 }
 
+// FOOTER
+.footer-bar {
+  background: #fef4f7;
+  text-align: center;
+  padding: 14px 16px 72px;
+  border-top: 1px solid #f0e8ec;
+  p {
+    font-size: 11px;
+    color: #a88698;
+    margin: 0;
+    line-height: 1.5;
+  }
+}
+
 // PRODUCT MODAL
 .modal-img-wrapper {
   width: 100%;
