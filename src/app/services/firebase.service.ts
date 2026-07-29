@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export interface Produto {
   id?: string;
@@ -38,9 +39,7 @@ export interface Pedido {
   createdAt: Date;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class FirebaseService {
 
   constructor(
@@ -65,6 +64,18 @@ export class FirebaseService {
     ).valueChanges({ idField: 'id' });
   }
 
+  searchProdutos(termo: string): Observable<Produto[]> {
+    const lower = termo.toLowerCase();
+    return this.firestore.collection<Produto>('produtos',
+      ref => ref.where('ativo', '==', true)
+    ).valueChanges({ idField: 'id' }).pipe(
+      map(prods => prods.filter(p =>
+        p.nome.toLowerCase().includes(lower) ||
+        (p.descricao && p.descricao.toLowerCase().includes(lower))
+      ))
+    );
+  }
+
   getCategorias(): Observable<Categoria[]> {
     return this.firestore.collection<Categoria>('categorias',
       ref => ref.where('ativo', '==', true)
@@ -73,8 +84,7 @@ export class FirebaseService {
 
   createPedido(pedido: Pedido): Promise<any> {
     return this.firestore.collection('pedidos').add({
-      ...pedido,
-      createdAt: new Date()
+      ...pedido, createdAt: new Date()
     });
   }
 

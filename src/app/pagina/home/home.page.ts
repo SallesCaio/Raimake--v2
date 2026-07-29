@@ -74,12 +74,10 @@ export class HomePage implements OnInit {
 
   categorias: any[] = [
     { nome: 'Todos', icon: 'grid-outline', active: true, ativo: true },
-    { nome: 'Batons', icon: 'color-palette-outline', active: false, ativo: true },
-    { nome: 'Bases', icon: 'sparkles-outline', active: false, ativo: true },
-    { nome: 'Sombras', icon: 'diamond-outline', active: false, ativo: true },
-    { nome: 'Corretivos', icon: 'eyedrop-outline', active: false, ativo: true },
-    { nome: 'Gloss', icon: 'water-outline', active: false, ativo: true },
-    { nome: 'Skincare', icon: 'leaf-outline', active: false, ativo: true }
+    { nome: 'Rosto', icon: 'sparkles-outline', active: false, ativo: true },
+    { nome: 'Olhos', icon: 'diamond-outline', active: false, ativo: true },
+    { nome: 'Boca', icon: 'color-palette-outline', active: false, ativo: true },
+    { nome: 'Acessórios', icon: 'bag-handle-outline', active: false, ativo: true }
   ];
 
   produtos: Produto[] = [];
@@ -91,4 +89,33 @@ export class HomePage implements OnInit {
     { title: 'Leve 3 por R$ 79,90', subtitle: 'Escolha seus favoritos', cta: 'Ver Ofertas', link: '/servicos', bg: 'linear-gradient(135deg, #d4a93f 0%, #e884b0 100%)' },
     { title: 'Frete Grátis', subtitle: 'Em compras acima de R$ 150', cta: 'Aproveitar', link: '/servicos', bg: 'linear-gradient(135deg, #a8456b 0%, #e884b0 100%)' }
   ];
+
+  searchText = '';
+  searchResults: Produto[] = [];
+  showSearch = false;
+
+  toggleSearch() {
+    this.showSearch = !this.showSearch;
+    if (!this.showSearch) {
+      this.searchText = '';
+      this.searchResults = [];
+    }
+  }
+
+  onSearchInput() {
+    if (this.searchText.trim().length < 2) {
+      this.searchResults = [];
+      return;
+    }
+    this.fb.searchProdutos(this.searchText).subscribe(prods => {
+      this.searchResults = prods;
+    });
+  }
+
+  selectSearchResult(p: Produto) {
+    this.showSearch = false;
+    this.searchText = '';
+    this.searchResults = [];
+    this.openProduct(p);
+  }
 }
