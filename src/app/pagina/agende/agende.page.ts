@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NavController } from '@ionic/angular';
 import { CarrinhoService, ItemCarrinho } from '../../carrinho.service';
 
 @Component({
@@ -17,9 +18,16 @@ export class AgendePage implements OnInit {
   clienteEndereco = '';
   clientePagamento = 'Pix';
 
-  constructor(private carrinho: CarrinhoService) { }
+  constructor(
+    private carrinho: CarrinhoService,
+    public nav: NavController
+  ) { }
 
   ngOnInit() {}
+
+  openPage(url: string) {
+    this.nav.navigateForward(url);
+  }
 
   ionViewWillEnter() {
     this.atualizar();
@@ -45,7 +53,7 @@ export class AgendePage implements OnInit {
 
     const desconto = this.clientePagamento === 'Pix' || this.clientePagamento === 'Dinheiro';
         const valorFinal = desconto ? this.total * 0.9 : this.total;
-        let msg = '🛍️ *NOVO PEDIDO - bybyRaiMakess*%0A%0A';
+        let msg = '🛍️ *NOVO PEDIDO - byRaiMakes*%0A%0A';
         msg += `👤 *Cliente:* ${this.clienteNome || 'Nao informado'}%0A`;
         msg += `📞 *Tel:* ${this.clienteTelefone}%0A`;
         msg += `📍 *Endereco:* ${this.clienteEndereco || 'Nao informado'}%0A`;
