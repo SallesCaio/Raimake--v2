@@ -10,6 +10,9 @@
 /* Fontes Beleza - Cormorant Garamond + Inter */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
 
+/* Global logo style for all pages */
+.logo-home { height: 24px; border-radius: 4px; display: block; }
+
 /* Basic CSS for apps built with Ionic */
 @import "@ionic/angular/css/normalize.css";
 @import "@ionic/angular/css/structure.css";
