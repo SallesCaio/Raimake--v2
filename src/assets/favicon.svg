@@ -1,0 +1,6 @@
+<!-- PWA Favicon - byRaiMakes -->
+<!-- Criar um PNG 512x512 com o logo sem fundo, nome e slogan -->
+<!-- Use ferramenta online como https://realfavicongenerator.net/ -->
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23e884b0'/%3E%3Cpath d='M30 40 L40 60 L55 35 L70 60 L80 40' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23e884b0'/%3E%3Cpath d='M30 40 L40 60 L55 35 L70 60 L80 40' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
