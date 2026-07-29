@@ -60,12 +60,32 @@
 
       <!-- Carrinho Preview -->
       <div class="cart-preview" *ngIf="cartQtd > 0" (click)="openPage('/agende')">
-        <div class="cart-preview-info">
+              <div class="cart-preview-info">
+                <ion-icon name="cart-outline"></ion-icon>
+                <span class="cart-count">{{ cartQtd }} {{ cartQtd === 1 ? 'item' : 'itens' }}</span>
+              </div>
+              <div class="cart-preview-total">
+                <span>Total previsto: <strong>R$ {{ cartTotal.toFixed(2) }}</strong></span>
+                <ion-icon name="chevron-forward-outline"></ion-icon>
+              </div>
+            </div>
+
+      <!-- Bottom Navigation -->
+      <div class="bottom-nav">
+        <a class="nav-item" (click)="openPage('/home')">
+          <ion-icon name="home-outline"></ion-icon>
+          <span>Início</span>
+        </a>
+        <a class="nav-item active" (click)="openPage('/servicos')">
+          <ion-icon name="bag-outline"></ion-icon>
+          <span>Catálogo</span>
+        </a>
+        <a class="nav-item" (click)="openPage('/agende')">
           <ion-icon name="cart-outline"></ion-icon>
-          <span class="cart-count">{{ cartQtd }} {{ cartQtd === 1 ? 'item' : 'itens' }}</span>
-        </div>
-        <div class="cart-preview-total">
-          <span>Total previsto: <strong>R$ {{ cartTotal.toFixed(2) }}</strong></span>
-          <ion-icon name="chevron-forward-outline"></ion-icon>
-        </div>
+          <span>Carrinho</span>
+        </a>
+        <a class="nav-item" (click)="openPage('/cadastro')">
+          <ion-icon name="person-outline"></ion-icon>
+          <span>Contato</span>
+        </a>
       </div>

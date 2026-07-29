@@ -1,14 +1,22 @@
 <ion-header [translucent]="true">
-  <ion-toolbar class="raimake-bar" style="--min-height: 60px;">
+  <ion-toolbar class="raimake-bar">
     <ion-buttons slot="start">
       <ion-menu-button auto-hide="false"></ion-menu-button>
     </ion-buttons>
     <ion-title>
       <div class="header-brand">
         <img src="assets/img/logo.png" class="logo-home" alt="byRaiMake">
-        <span class="header-tagline">SUA BELEZA. SEU GLOW.</span>
+        <div class="header-brand-text">
+          <span class="brand-name"><span class="brand-pink">byRai</span><span class="brand-gold">Make</span></span>
+          <span class="header-tagline">SUA BELEZA. SEU GLOW.</span>
+        </div>
       </div>
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="openPage('/admin/login')">
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -34,11 +42,47 @@
       </ion-label>
     </ion-item>
     <ion-item>
-          <ion-icon name="location-outline" slot="start" color="primary"></ion-icon>
-          <ion-label>
-            <h2>Área de Entrega</h2>
-            <p>{{ entrega }}</p>
-          </ion-label>
-        </ion-item>
-      </ion-list>
-    </ion-content>
+      <ion-icon name="location-outline" slot="start" color="primary"></ion-icon>
+      <ion-label>
+        <h2>Área de Entrega</h2>
+        <p>{{ entrega }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <div class="disponibilidade-bar">
+    <p>* Consulte disponibilidade. Produtos sujeitos a falta de estoque.</p>
+  </div>
+</ion-content>
+
+<!-- Carrinho Preview -->
+<div class="cart-preview" *ngIf="cartQtd > 0" (click)="openPage('/agende')">
+  <div class="cart-preview-info">
+    <ion-icon name="cart-outline"></ion-icon>
+    <span class="cart-count">{{ cartQtd }} {{ cartQtd === 1 ? 'item' : 'itens' }}</span>
+  </div>
+  <div class="cart-preview-total">
+    <span>Total previsto: <strong>R$ {{ cartTotal.toFixed(2) }}</strong></span>
+    <ion-icon name="chevron-forward-outline"></ion-icon>
+  </div>
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a class="nav-item" (click)="openPage('/home')">
+    <ion-icon name="home-outline"></ion-icon>
+    <span>Início</span>
+  </a>
+  <a class="nav-item" (click)="openPage('/servicos')">
+    <ion-icon name="bag-outline"></ion-icon>
+    <span>Catálogo</span>
+  </a>
+  <a class="nav-item" (click)="openPage('/agende')">
+    <ion-icon name="cart-outline"></ion-icon>
+    <span>Carrinho</span>
+  </a>
+  <a class="nav-item active" (click)="openPage('/cadastro')">
+    <ion-icon name="person-outline"></ion-icon>
+    <span>Contato</span>
+  </a>
+</div>
