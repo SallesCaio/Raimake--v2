@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title>
       <div class="header-brand">
-        <img src="assets/img/logo.png" class="logo-home" alt="byRaiMakes">
+        <img src="assets/img/logo1.png" class="logo-home" alt="byRaiMakes">
         <div class="header-brand-text">
           <span class="brand-name"><span class="brand-pink">byRai</span><span class="brand-gold">Makes</span></span>
           <span class="header-tagline">SUA BELEZA. SEU GLOW.</span>
@@ -13,10 +13,10 @@
       </div>
     </ion-title>
     <ion-buttons slot="end">
-          <ion-button fill="clear" (click)="openPage('/admin/login')">
-            <ion-icon name="shield-checkmark-outline"></ion-icon>
-          </ion-button>
-        </ion-buttons>
+      <ion-button fill="clear" (click)="openPage('/admin/login')">
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -38,72 +38,54 @@
             <ion-label class="prod-cat">{{ p.categoria }}</ion-label>
             <ion-card-title class="prod-nome">{{ p.nome }}</ion-card-title>
             <div class="prod-rodape">
-                          <span class="prod-preco">R$ {{ p.preco.toFixed(2) }}</span>
-                          <ion-button *ngIf="!semEstoque(p)" fill="clear" color="tertiary" size="small" (click)="add(p)">
-                            <ion-icon name="add-circle" slot="icon-only"></ion-icon>
-                          </ion-button>
-                          <ion-badge *ngIf="semEstoque(p)" color="danger" class="sem-estoque-badge">Indisponível</ion-badge>
+              <span class="prod-preco">R$ {{ p.preco.toFixed(2) }}</span>
+              <ion-button *ngIf="!semEstoque(p)" fill="clear" color="tertiary" size="small" (click)="add(p)">
+                <ion-icon name="add-circle" slot="icon-only"></ion-icon>
+              </ion-button>
+              <ion-badge *ngIf="semEstoque(p)" color="danger" class="sem-estoque-badge">Indisponível</ion-badge>
             </div>
           </ion-card-content>
         </ion-card>
       </ion-col>
     </ion-row>
     <div *ngIf="!produtos.length" class="ion-text-center ion-padding">
-          <p>Nenhum produto encontrado</p>
-        </div>
-      </ion-grid>
-
-      <div class="disponibilidade-bar">
-              <p>* Consulte disponibilidade. Produtos sujeitos a falta de estoque.</p>
-            </div>
-          </ion-content>
-
-      <!-- Carrinho Preview -->
-      <div class="cart-preview" *ngIf="cartQtd > 0" (click)="openPage('/agende')">
-              <div class="cart-preview-info">
-                <ion-icon name="cart-outline"></ion-icon>
-                <span class="cart-count">{{ cartQtd }} {{ cartQtd === 1 ? 'item' : 'itens' }}</span>
-              </div>
-              <div class="cart-preview-total">
-                <span>Total previsto: <strong>R$ {{ cartTotal.toFixed(2) }}</strong></span>
-                <ion-icon name="chevron-forward-outline"></ion-icon>
-              </div>
-            </div>
-
-      <!-- Bottom Navigation -->
-      <div class="bottom-nav">
-        <a class="nav-item" (click)="openPage('/home')">
-          <ion-icon name="home-outline"></ion-icon>
-          <span>Início</span>
-        </a>
-        <a class="nav-item active" (click)="openPage('/servicos')">
-          <ion-icon name="bag-outline"></ion-icon>
-          <span>Catálogo</span>
-        </a>
-        <a class="nav-item" (click)="openPage('/agende')">
-          <ion-icon name="cart-outline"></ion-icon>
-          <span>Carrinho</span>
-        </a>
-        <a class="nav-item" (click)="openPage('/cadastro')">
-          <ion-icon name="person-outline"></ion-icon>
-          <span>Contato</span>
-        </a>
-      </div>
-<div class="footer-bar">
-  <div class="footer-brand">
-    <img src="assets/img/logo.png" class="footer-logo" alt="byRaiMakes">
-    <div class="footer-brand-text">
-      <span class="footer-name">byRaiMakes</span>
-      <span class="footer-tagline">SUA BELEZA. SEU GLOW.</span>
+      <p>Nenhum produto encontrado</p>
     </div>
+  </ion-grid>
+
+  <div class="disponibilidade-bar">
+    <p>* Consulte disponibilidade. Produtos sujeitos a falta de estoque.</p>
   </div>
-  <div class="footer-social">
-    <a href="https://wa.me/5521970579631" target="_blank" class="social-icon whatsapp"><ion-icon name="logo-whatsapp"></ion-icon></a>
-    <a href="https://instagram.com/byraimakes" target="_blank" class="social-icon instagram"><ion-icon name="logo-instagram"></ion-icon></a>
-    <a href="mailto:contato@byraimakes.com" class="social-icon email"><ion-icon name="mail-outline"></ion-icon></a>
+</ion-content>
+
+<!-- Carrinho Preview -->
+<div class="cart-preview" *ngIf="cartQtd > 0" (click)="openPage('/agende')">
+  <div class="cart-preview-info">
+    <ion-icon name="cart-outline"></ion-icon>
+    <span class="cart-count">{{ cartQtd }} {{ cartQtd === 1 ? 'item' : 'itens' }}</span>
   </div>
-  <div class="footer-info">
-    <p>Entrega: Galeao - Ilha do Governador e arredores</p>
-    <p class="footer-copy">&copy; 2026 byRaiMakes — Todos os direitos reservados</p>
+  <div class="cart-preview-total">
+    <span>Total previsto: <strong>R$ {{ cartTotal.toFixed(2) }}</strong></span>
+    <ion-icon name="chevron-forward-outline"></ion-icon>
   </div>
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a class="nav-item" (click)="openPage('/home')">
+    <ion-icon name="home-outline"></ion-icon>
+    <span>Início</span>
+  </a>
+  <a class="nav-item active" (click)="openPage('/servicos')">
+    <ion-icon name="bag-outline"></ion-icon>
+    <span>Catálogo</span>
+  </a>
+  <a class="nav-item" (click)="openPage('/agende')">
+    <ion-icon name="cart-outline"></ion-icon>
+    <span>Carrinho</span>
+  </a>
+  <a class="nav-item" (click)="openPage('/cadastro')">
+    <ion-icon name="person-outline"></ion-icon>
+    <span>Contato</span>
+  </a>
 </div>
