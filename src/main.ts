@@ -1,6 +1,10 @@
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { inject } from '@vercel/analytics';
 import 'firebase/compat/auth'; // registra firebase.auth globalmente (RecaptchaVerifier p/ SMS Auth)
+
+// Vercel Web Analytics: injeta script de tracking uma única vez
+inject();
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
