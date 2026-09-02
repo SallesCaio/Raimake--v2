@@ -1,34 +1,27 @@
-<ion-header [translucent]="true">
-  <ion-toolbar class="raimake-bar">
-    <ion-buttons slot="start">
-      <ion-menu-button auto-hide="false"></ion-menu-button>
-    </ion-buttons>
-    <ion-title>
-      <div class="header-brand">
-        <img src="assets/img/logo1.png" class="logo-home" alt="byRaiMakes">
-        <div class="header-brand-text">
-          <span class="brand-name"><span class="brand-pink">byRai</span><span class="brand-gold">Makes</span></span>
-          <span class="header-tagline">SUA BELEZA. SEU GLOW.</span>
-        </div>
-      </div>
-    </ion-title>
-    <ion-buttons slot="end">
-      <ion-button fill="clear" (click)="openPage('/admin/login')" class="admin-btn">
-        <ion-icon name="shield-checkmark-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-header [showAdminButton]="true" [showMenuButton]="true" (adminClick)="openAdmin()"></app-header>
 
 <ion-content [fullscreen]="true" class="home-bg">
-  <section class="hero-banner">
+  <section class="hero-banner" [ngStyle]="{'--slide-bg': currentSlideBg}">
     <div class="banner-content">
-      <h2>{{ slides[0].title }}</h2>
-      <p>{{ slides[0].subtitle }}</p>
-      <ion-button class="primary" (click)="openPage(slides[0].link)">
-        {{ slides[0].cta }}
+      <h2 *ngIf="slides[slideAtivo]?.title" class="banner-title">{{ slides[slideAtivo].title }}</h2>
+      <p *ngIf="slides[slideAtivo]?.subtitle" class="banner-subtitle">{{ slides[slideAtivo].subtitle }}</p>
+      <ion-button 
+        *ngIf="slides[slideAtivo]?.cta && slides[slideAtivo]?.link"
+        class="primary" 
+        (click)="openPage(slides[slideAtivo].link)">
+        {{ slides[slideAtivo].cta }}
       </ion-button>
+    <button
+      *ngFor="let s of slides; let i = index"
+      class="dot"
+      [class.active]="i === slideAtivo"
+      [attr.aria-label]="'Ir para slide ' + (i + 1)"
+      [attr.aria-current]="i === slideAtivo ? 'true' : null"
+      (click)="setSlide(i)">
+    </button>
     </div>
+    <button class="nav prev" aria-label="Slide anterior" (click)="prevSlide()">&#8249;</button>
+    <button class="nav next" aria-label="Próximo slide" (click)="nextSlide()">&#8250;</button>
   </section>
 
   <section class="categories-section">
@@ -70,7 +63,7 @@
       <ion-button class="gold" (click)="openPage('/servicos')">
         Ver Ofertas
       </ion-button>
-    </section>
+  </section>
 
   <section class="contact-section">
     <ion-button fill="clear" color="medium" expand="block" (click)="openPage('/cadastro')">
@@ -116,22 +109,4 @@
   </div>
 </div>
 
-<!-- Bottom Navigation -->
-<div class="bottom-nav">
-  <a class="nav-item active" (click)="openPage('/home')">
-    <ion-icon name="home-outline"></ion-icon>
-    <span>Início</span>
-  </a>
-  <a class="nav-item" (click)="openPage('/servicos')">
-    <ion-icon name="bag-outline"></ion-icon>
-    <span>Catálogo</span>
-  </a>
-  <a class="nav-item" (click)="openPage('/agende')">
-    <ion-icon name="cart-outline"></ion-icon>
-    <span>Carrinho</span>
-  </a>
-  <a class="nav-item" (click)="openPage('/cadastro')">
-    <ion-icon name="person-outline"></ion-icon>
-    <span>Contato</span>
-  </a>
-</div>
+<app-bottom-nav></app-bottom-nav>

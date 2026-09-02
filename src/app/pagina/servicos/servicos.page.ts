@@ -1,12 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastController, NavController } from '@ionic/angular';
+import { ToastController, NavController, AlertController } from '@ionic/angular';
 import { CarrinhoService, ItemCarrinho } from '../../carrinho.service';
 import { FirebaseService, Produto } from '../../services/firebase.service';
+import { AdminSessionService } from '../../services/admin-session.service';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
+import { RouterModule } from '@angular/router';
+import { HeaderComponent } from '../../shared/components/header/header.component';
+import { BottomNavComponent } from '../../shared/components/bottom-nav/bottom-nav.component';
 
 @Component({
   selector: 'app-servicos',
   templateUrl: './servicos.page.html',
   styleUrls: ['./servicos.page.scss'],
+  standalone: true,
+  imports: [CommonModule, IonicModule, RouterModule, HeaderComponent, BottomNavComponent]
 })
 export class ServicosPage implements OnInit {
   produtos: Produto[] = [];
@@ -18,8 +26,10 @@ export class ServicosPage implements OnInit {
   constructor(
     private carrinho: CarrinhoService,
     private toast: ToastController,
+    private alertCtrl: AlertController,
     private fb: FirebaseService,
     public nav: NavController,
+    private adminSession: AdminSessionService,
   ) { }
 
   ngOnInit() {
@@ -32,6 +42,10 @@ export class ServicosPage implements OnInit {
 
   openPage(url: string) {
     this.nav.navigateForward(url);
+  }
+
+  openAdmin() {
+    this.nav.navigateForward(this.adminSession.adminTargetUrl());
   }
 
   loadProdutos() {
@@ -80,12 +94,16 @@ export class ServicosPage implements OnInit {
     };
     this.carrinho.adicionar(item);
     this.atualizarCart();
-    const t = await this.toast.create({
-      message: `${p.nome} adicionado ao carrinho`,
-      duration: 1200,
-      color: 'success',
-      position: 'bottom',
+    
+    // Usa mesmo alert do H5.2 (home)
+    const alert = await this.alertCtrl.create({
+      header: 'Adicionado!',
+      message: `${p.nome} foi adicionado ao carrinho.`,
+      buttons: [
+        { text: 'Continuar comprando', role: 'cancel' },
+        { text: 'Ir ao carrinho', handler: () => this.nav.navigateForward('/agende') }
+      ]
     });
-    await t.present();
+    await alert.present();
   }
 }

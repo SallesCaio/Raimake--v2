@@ -30,6 +30,18 @@ export interface Categoria {
   active?: boolean;
 }
 
+export interface Banner {
+  id?: string;
+  titulo: string;
+  subtitulo: string;
+  cta: string;
+  link: string;
+  imagemUrl: string;
+  ativo: boolean;
+  ordem: number;
+  createdAt?: Date;
+}
+
 export interface Pedido {
   id?: string;
   userId: string;
@@ -95,15 +107,15 @@ export class FirebaseService {
   }
 
   login(email: string, password: string): Promise<any> {
-    return this.auth.signInWithEmailAndPassword(email, password);
+    return this.auth['signInWithEmailAndPassword'](email, password);
   }
 
   register(email: string, password: string): Promise<any> {
-    return this.auth.createUserWithEmailAndPassword(email, password);
+    return this.auth['createUserWithEmailAndPassword'](email, password);
   }
 
   logout(): Promise<void> {
-    return this.auth.signOut();
+    return this.auth['signOut']();
   }
 
   getCurrentUser(): Observable<any> {
@@ -111,8 +123,41 @@ export class FirebaseService {
   }
 
   uploadImage(file: File, path: string): Promise<string> {
-    const ref = this.storage.ref(path);
+    const fileName = `${Date.now()}_${file.name}`;
+    const filePath = `${path}/${fileName}`;
+    const ref = this.storage.ref(filePath);
     const task = ref.put(file);
+
     return task.then(snapshot => snapshot.ref.getDownloadURL());
+  }
+
+  getAllBanners(): Observable<Banner[]> {
+    return this.firestore.collection<Banner>('banners', ref =>
+      ref.orderBy('ordem', 'asc')
+    ).valueChanges({ idField: 'id' });
+  }
+
+  getBannersAtivas(): Observable<Banner[]> {
+    return this.firestore.collection<Banner>('banners', ref =>
+      ref.where('ativo', '==', true).orderBy('ordem', 'asc')
+    ).valueChanges({ idField: 'id' });
+  }
+
+  createBanner(banner: Omit<Banner, 'id'>): Promise<any> {
+    return this.firestore.collection('banners').add({
+      ...banner,
+      createdAt: new Date()
+    });
+  }
+
+  updateBanner(id: string, banner: Partial<Banner>): Promise<void> {
+    return this.firestore.doc(`banners/${id}`).update({
+      ...banner,
+      updatedAt: new Date()
+    });
+  }
+
+  deleteBanner(id: string): Promise<void> {
+    return this.firestore.doc(`banners/${id}`).delete();
   }
 }

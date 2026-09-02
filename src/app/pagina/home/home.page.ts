@@ -1,23 +1,42 @@
-import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
-import { FirebaseService, Produto } from '../../services/firebase.service';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { NavController, AlertController } from '@ionic/angular';
+import { FirebaseService, Produto, Banner } from '../../services/firebase.service';
+import { AdminSessionService } from '../../services/admin-session.service';
 import { CarrinhoService, ItemCarrinho } from '../../carrinho.service';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
+import { RouterModule } from '@angular/router';
+import { HeaderComponent } from '../../shared/components/header/header.component';
+import { BottomNavComponent } from '../../shared/components/bottom-nav/bottom-nav.component';
+
+interface HeroSlide {
+  title: string;
+  subtitle: string;
+  cta: string;
+  link: string;
+  bg: string;
+}
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
+  standalone: true,
+  imports: [CommonModule, IonicModule, RouterModule, HeaderComponent, BottomNavComponent]
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     public nav: NavController,
+    private alertCtrl: AlertController,
     private fb: FirebaseService,
-    private carrinho: CarrinhoService
+    private carrinho: CarrinhoService,
+    private adminSession: AdminSessionService
   ) { }
 
   ngOnInit() {
     this.loadProdutos();
     this.loadCategorias();
+    this.loadBanners();
   }
 
   ionViewWillEnter() {
@@ -26,6 +45,10 @@ export class HomePage implements OnInit {
 
   openPage(url: string) {
     this.nav.navigateForward(url);
+  }
+
+  openAdmin() {
+    this.nav.navigateForward(this.adminSession.adminTargetUrl());
   }
 
   openProduct(p: Produto) {
@@ -41,7 +64,29 @@ export class HomePage implements OnInit {
 
   loadProdutos() {
     this.fb.getProdutos().subscribe(prods => {
-      this.produtos = prods;
+      this.produtos = prods.filter(p => p.destaque === true);
+    });
+  }
+
+  loadBanners() {
+    this.fb.getBannersAtivas().subscribe(banners => {
+      this.banners = banners;
+      const withImage = banners.filter(b => b.imagemUrl && b.imagemUrl.trim() !== '');
+      this.slides = withImage.slice(0, 8).map(b => ({
+        title: b.titulo || '',
+        subtitle: b.subtitulo || '',
+        cta: b.cta || '',
+        link: b.link || '',
+        bg: `url(${b.imagemUrl}) center/cover no-repeat`
+      }));
+      if (this.slides.length < 3) {
+        const fallbacks = [
+          { title: 'Seu glow começa aqui', subtitle: 'Produtos escolhidos para realçar sua beleza', cta: 'Conheça', link: '/servicos', bg: 'linear-gradient(135deg, #e884b0 0%, #d4a93f 100%)' },
+          { title: 'Novidades', subtitle: 'Confira as últimas chegadas', cta: 'Ver Novidades', link: '/servicos', bg: 'linear-gradient(135deg, #d4a93f 0%, #e884b0 100%)' },
+          { title: 'Um carinho special', subtitle: 'Um mimo acompanha sua compra', cta: 'Conheça', link: '/servicos', bg: 'linear-gradient(135deg, #a8456b 0%, #e884b0 100%)' }
+        ];
+        this.slides = [...this.slides, ...fallbacks.slice(0, 3 - this.slides.length)];
+      }
     });
   }
 
@@ -50,7 +95,7 @@ export class HomePage implements OnInit {
       this.loadProdutos();
     } else {
       this.fb.getProdutosByCategoria(cat).subscribe(prods => {
-        this.produtos = prods;
+        this.produtos = prods.filter(p => p.destaque === true);
       });
     }
   }
@@ -86,16 +131,30 @@ export class HomePage implements OnInit {
   cartQtd = 0;
   cartTotal = 0;
 
-  slides: any[] = [
-    { title: 'Nova Coleção', subtitle: 'Descubra os produtos', cta: 'Ver Coleção', link: '/servicos', bg: 'linear-gradient(135deg, #e884b0 0%, #d4a93f 100%)' },
-    { title: 'Leve 3 por R$ 79,90', subtitle: 'Escolha seus favoritos', cta: 'Ver Ofertas', link: '/servicos', bg: 'linear-gradient(135deg, #d4a93f 0%, #e884b0 100%)' },
-    { title: 'Frete Grátis', subtitle: 'Em compras acima de R$ 150', cta: 'Aproveitar', link: '/servicos', bg: 'linear-gradient(135deg, #a8456b 0%, #e884b0 100%)' }
-  ];
+  slides: HeroSlide[] = [];
+  banners: Banner[] = [];
 
   showModal = false;
   produtoModal: Produto | null = null;
+  slideAtivo = 0;
+  private slideAuto?: ReturnType<typeof setInterval>;
+  isBrowser = typeof window !== 'undefined';
 
-  addToCartModal(p: Produto) {
+  get currentSlideBg(): string {
+    return this.slides[this.slideAtivo]?.bg
+      || 'linear-gradient(135deg, #e884b0 0%, #d4a93f 100%)';
+  }
+
+  nextSlide() { this.slideAtivo = (this.slideAtivo + 1) % this.slides.length; }
+  prevSlide() { this.slideAtivo = (this.slideAtivo - 1 + this.slides.length) % this.slides.length; }
+  setSlide(i: number) { this.slideAtivo = i; }
+
+  ngAfterViewInit() { this.startAuto(); }
+  ngOnDestroy() { this.stopAuto(); }
+  private startAuto() { if (this.isBrowser) { this.stopAuto(); this.slideAuto = setInterval(() => this.nextSlide(), 5000); } }
+  private stopAuto() { if (this.slideAuto) clearInterval(this.slideAuto); }
+
+  async addToCartModal(p: Produto) {
     const item: ItemCarrinho = {
       id: p.id || '',
       nome: p.nome,
@@ -105,6 +164,19 @@ export class HomePage implements OnInit {
     };
     this.carrinho.adicionar(item);
     this.atualizarCart();
+
+    const alert = await this.alertCtrl.create({
+      header: 'Adicionado!',
+      message: `${p.nome} foi adicionado ao carrinho.`,
+      buttons: [
+        { text: 'Continuar comprando', role: 'cancel' },
+        {
+          text: 'Ir ao carrinho',
+          handler: () => this.nav.navigateForward('/agende')
+        }
+      ]
+    });
+    await alert.present();
     this.showModal = false;
   }
 }

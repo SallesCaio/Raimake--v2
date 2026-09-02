@@ -1,24 +1,4 @@
-<ion-header [translucent]="true">
-  <ion-toolbar class="raimake-bar">
-    <ion-buttons slot="start">
-      <ion-menu-button auto-hide="false"></ion-menu-button>
-    </ion-buttons>
-    <ion-title>
-      <div class="header-brand">
-        <img src="assets/img/logo1.png" class="logo-home" alt="byRaiMakes">
-        <div class="header-brand-text">
-          <span class="brand-name"><span class="brand-pink">byRai</span><span class="brand-gold">Makes</span></span>
-          <span class="header-tagline">SUA BELEZA. SEU GLOW.</span>
-        </div>
-      </div>
-    </ion-title>
-    <ion-buttons slot="end">
-      <ion-button fill="clear" (click)="openPage('/admin/login')" class="admin-btn">
-        <ion-icon name="shield-checkmark-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-header [showAdminButton]="true" [showMenuButton]="true" (adminClick)="openAdmin()"></app-header>
 
 <ion-content [fullscreen]="true" class="cart-bg">
   <div *ngIf="itens.length === 0" class="vazio">
@@ -48,9 +28,13 @@
       Finalizar no WhatsApp
     </ion-button>
   </div>
+
+  <div *ngIf="mimo?.ativo" class="mimo-banner">
+    🎁 Um carinho especial acompanha seu pedido.
+  </div>
 </ion-content>
 
-<!-- Modal Checkout -->
+<!-- Modal Checkout (H6: telefone -> detecta recorrente -> múltiplos endereços -> LGPD -> mimo) -->
 <ion-modal [isOpen]="showCheckout" (didDismiss)="showCheckout = false">
   <ng-template>
     <ion-header>
@@ -64,83 +48,228 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <div class="checkout-resumo">
-        <h3>Resumo do Pedido</h3>
-        <div *ngFor="let i of itens" class="checkout-item">
-          <span>{{ i.nome }} x{{ i.qtd }}</span>
-          <span>R$ {{ (i.preco * i.qtd).toFixed(2) }}</span>
-        </div>
-        <div class="checkout-total">
-          <strong>Total:</strong>
-          <strong>R$ {{ total.toFixed(2) }}</strong>
-        </div>
+
+      <!-- Passo 1: telefone -->
+      <div *ngIf="!telefoneVerificado">
+        <h3>Identificação rápida</h3>
+        <p class="muted">Informe seu WhatsApp para agilizar (sem criar conta).</p>
+        <ion-item>
+          <ion-label position="stacked">WhatsApp *</ion-label>
+          <ion-input [(ngModel)]="clienteTelefone" (ionInput)="formatarTelefone()" placeholder="+55 (21) 99999-9999" inputmode="numeric" maxlength="15"></ion-input>
+        </ion-item>
+        <ion-button expand="block" class="ion-margin-top" (click)="verificarTelefone()" [disabled]="!clienteTelefone">
+          Avançar
+        </ion-button>
       </div>
 
-      <ion-list class="ion-margin-top">
-        <ion-item>
-          <ion-label position="stacked">Seu telefone (WhatsApp) *</ion-label>
-          <ion-input [(ngModel)]="clienteTelefone" placeholder="(21) 99999-9999"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="stacked">Nome completo</ion-label>
-          <ion-input [(ngModel)]="clienteNome" placeholder="Seu nome"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="stacked">Endereço de entrega</ion-label>
-          <ion-input [(ngModel)]="clienteEndereco" placeholder="Rua, número, bairro"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="stacked">Forma de pagamento</ion-label>
-          <ion-select [(ngModel)]="clientePagamento">
-            <ion-select-option value="Pix">Pix (10% desconto)</ion-select-option>
-            <ion-select-option value="Dinheiro">Dinheiro</ion-select-option>
-            <ion-select-option value="Cartão">Cartão</ion-select-option>
-          </ion-select>
-        </ion-item>
-      </ion-list>
-
-      <div class="checkout-preview" *ngIf="clientePagamento === 'Pix' || clientePagamento === 'Dinheiro'">
-              <p class="pix-desconto">🎉 {{ clientePagamento }}: 10% de desconto!</p>
-        <div class="checkout-total">
-          <span>Subtotal:</span>
-          <span>R$ {{ total.toFixed(2) }}</span>
+      <!-- Passo 2: dados -->
+      <div *ngIf="telefoneVerificado">
+        <div class="checkout-resumo">
+          <h3>Resumo do Pedido</h3>
+          <div *ngFor="let i of itens" class="checkout-item">
+            <span>{{ i.nome }} x{{ i.qtd }}</span>
+            <span>R$ {{ (i.preco * i.qtd).toFixed(2) }}</span>
+          </div>
+          <div class="checkout-total">
+            <strong>Total:</strong>
+            <strong>R$ {{ total.toFixed(2) }}</strong>
+          </div>
         </div>
-        <div class="checkout-total desconto">
-          <span>Desconto (10%):</span>
-          <span>- R$ {{ (total * 0.1).toFixed(2) }}</span>
+
+        <ion-list class="ion-margin-top">
+          <ion-item *ngIf="clienteExistente">
+            <ion-note color="success">Cliente recorrente reconhecido! Dados pré-preenchidos.</ion-note>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Nome completo *</ion-label>
+            <ion-input [(ngModel)]="clienteNome" placeholder="Seu nome"></ion-input>
+          </ion-item>
+
+          <!-- Endereços -->
+          <ion-item *ngIf="enderecos.length > 0 && !usandoNovoEndereco">
+            <ion-label position="stacked">Endereço de entrega</ion-label>
+            <ion-select [(ngModel)]="enderecoSelecionado">
+              <ion-select-option *ngFor="let e of enderecos; let idx = index" [value]="idx">
+                {{ e.apelido || ('Endereço ' + (idx + 1)) }} — {{ e.rua }}, {{ e.num }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-button *ngIf="enderecos.length > 0 && !usandoNovoEndereco" fill="outline" color="secondary" size="small" class="ion-margin-start" (click)="usandoNovoEndereco = true">
+            + Incluir novo endereço
+          </ion-button>
+          <ion-button *ngIf="enderecos.length > 0 && usandoNovoEndereco" fill="outline" color="medium" size="small" class="ion-margin-start" (click)="usandoNovoEndereco = false">
+            ← Voltar aos endereços salvos
+          </ion-button>
+
+          <div *ngIf="usandoNovoEndereco || enderecos.length === 0">
+            <ion-item>
+              <ion-label position="stacked">CEP *</ion-label>
+              <ion-input [(ngModel)]="clienteCep" (ionInput)="formatarCep()" (ionBlur)="buscarCep()" placeholder="00000-000" inputmode="numeric" maxlength="9"></ion-input>
+              <ion-spinner *ngIf="cepBuscando" slot="end" name="dots"></ion-spinner>
+                            <ion-button slot="end" size="small" color="secondary" [disabled]="!cepPronto() || cepBuscando" (click)="buscarCepManual()">
+                              Buscar
+                            </ion-button>
+                          </ion-item>
+                          <ion-text color="danger" *ngIf="cepErro">
+                            <p class="ion-padding-start">{{ cepErro }}</p>
+                          </ion-text>
+            <ion-item>
+              <ion-label position="stacked">Apelido (ex: Casa, Trabalho)</ion-label>
+              <ion-input [(ngModel)]="novoEndereco.apelido"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Rua *</ion-label>
+              <ion-input [(ngModel)]="novoEndereco.rua"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Número *</ion-label>
+              <ion-input [(ngModel)]="novoEndereco.num"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Bairro *</ion-label>
+              <ion-input [(ngModel)]="novoEndereco.bairro"></ion-input>
+            </ion-item>
+          </div>
+
+          <ion-item>
+            <ion-label position="stacked">Forma de pagamento</ion-label>
+            <ion-select [(ngModel)]="clientePagamento">
+              <ion-select-option value="Pix">Pix (10% desconto, máx R$ 15)</ion-select-option>
+              <ion-select-option value="Dinheiro">Dinheiro (10% desconto, máx R$ 15)</ion-select-option>
+              <ion-select-option value="Cartão">Cartão</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+
+        <div class="checkout-preview" *ngIf="clientePagamento === 'Pix' || clientePagamento === 'Dinheiro'">
+          <p class="pix-desconto">🎉 {{ clientePagamento }}: 10% de desconto (máx R$ 15,00)!</p>
+          <div class="checkout-total">
+            <span>Subtotal:</span>
+            <span>R$ {{ total.toFixed(2) }}</span>
+          </div>
+          <div class="checkout-total desconto">
+            <span>Desconto (10%, máx R$ 15):</span>
+            <span>- R$ {{ descontoAtual().toFixed(2) }}</span>
+          </div>
+          <div class="checkout-total final">
+            <strong>Total com desconto:</strong>
+            <strong>R$ {{ totalComDesconto().toFixed(2) }}</strong>
+          </div>
         </div>
-        <div class="checkout-total final">
-          <strong>Total com desconto:</strong>
-          <strong>R$ {{ (total * 0.9).toFixed(2) }}</strong>
-        </div>
+
+        <ion-item *ngIf="mimo?.ativo" class="mimo-item" lines="none">
+          🎁 Um carinho especial acompanha seu pedido.
+        </ion-item>
+
+        <!-- Termos de Uso + Política de Privacidade -->
+        <ion-item lines="full">
+          <ion-checkbox slot="start" [(ngModel)]="termosAceitos" labelPlacement="end" color="secondary">
+            Li e aceito os Termos de Uso.
+          </ion-checkbox>
+        </ion-item>
+        <ion-button fill="clear" size="small" color="medium" class="ion-margin-start" (click)="showTermos = true">
+          Ver Termos e Política
+        </ion-button>
+
+        <ion-button expand="block" class="ion-margin-top" (click)="confirmarPedido()" [disabled]="!podeConfirmar || salvando">
+          <ion-icon name="logo-whatsapp" slot="start"></ion-icon>
+          {{ salvando ? 'Processando...' : 'Confirmar Pedido via WhatsApp' }}
+        </ion-button>
       </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
 
-      <ion-button expand="block" class="ion-margin-top" (click)="confirmarPedido()" [disabled]="!clienteTelefone">
-        <ion-icon name="logo-whatsapp" slot="start"></ion-icon>
-        Confirmar Pedido via WhatsApp
+<!-- Modal: Pedido Finalizado -->
+<ion-modal [isOpen]="pedidoFinalizadoId !== ''" (didDismiss)="pedidoFinalizadoId = ''">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar color="secondary">
+        <ion-title>Pedido Finalizado!</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding ion-text-center">
+      <ion-icon name="checkmark-circle" color="success" style="font-size:64px"></ion-icon>
+      <h2>Seu pedido foi registrado</h2>
+      <p>ID do pedido: <strong>#{{ pedidoFinalizadoId.slice(-6).toUpperCase() }}</strong></p>
+      <p>Enviamos para o WhatsApp da loja.</p>
+      <ion-button expand="block" (click)="pedidoFinalizadoId = ''; showFeedback = true">
+        Avaliar atendimento
+      </ion-button>
+      <ion-button expand="block" fill="outline" (click)="pedidoFinalizadoId = ''">
+        Fechar
       </ion-button>
     </ion-content>
   </ng-template>
 </ion-modal>
-<!-- Bottom Navigation -->
-<div class="bottom-nav">
-  <a class="nav-item" (click)="openPage('/home')">
-    <ion-icon name="home-outline"></ion-icon>
-    <span>Inicio</span>
-  </a>
-  <a class="nav-item" (click)="openPage('/servicos')">
-    <ion-icon name="bag-outline"></ion-icon>
-    <span>Catalogo</span>
-  </a>
-  <a class="nav-item active" (click)="openPage('/agende')">
-    <ion-icon name="cart-outline"></ion-icon>
-    <span>Carrinho</span>
-  </a>
-  <a class="nav-item" (click)="openPage('/cadastro')">
-    <ion-icon name="person-outline"></ion-icon>
-    <span>Contato</span>
-  </a>
-</div>
+
+<!-- Modal: Feedback pós-pedido -->
+<ion-modal [isOpen]="showFeedback" (didDismiss)="showFeedback = false">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Sua opinião</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="showFeedback = false">Fechar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <p>Como foi sua experiência?</p>
+      <ion-item>
+        <ion-label>Avaliação</ion-label>
+        <ion-select [(ngModel)]="feedbackNota">
+          <ion-select-option [value]="5">⭐⭐⭐⭐⭐ Excelente</ion-select-option>
+          <ion-select-option [value]="4">⭐⭐⭐⭐ Boa</ion-select-option>
+          <ion-select-option [value]="3">⭐⭐⭐ Razoável</ion-select-option>
+          <ion-select-option [value]="2">⭐⭐ Ruim</ion-select-option>
+          <ion-select-option [value]="1">⭐ Péssima</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Comentário (opcional)</ion-label>
+        <ion-textarea [(ngModel)]="feedbackTexto" placeholder="Conte o que achou..."></ion-textarea>
+      </ion-item>
+      <ion-button expand="block" class="ion-margin-top" (click)="enviarFeedback()">
+        Enviar avaliação
+      </ion-button>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<app-bottom-nav [activeUrl]="'/agende'"></app-bottom-nav>
+
+<!-- Modal Termos de Uso + Política de Privacidade -->
+<ion-modal [isOpen]="showTermos" (didDismiss)="showTermos = false">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Termos e Política</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="showTermos = false">Fechar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <h2>Termos de Uso</h2>
+      <p><strong>Funcionamento da compra.</strong> O pedido é registrado após a confirmação no checkout e o atendente entra em contato pelo WhatsApp informado para alinhar disponibilidade e área de entrega.</p>
+      <p><strong>Informações do pedido.</strong> Os itens, quantidades e valores exibidos no carrinho refletem a proposta enviada; a confirmação final ocorre após contato da loja.</p>
+      <p><strong>Pagamento.</strong> Pix e Dinheiro concedem 10% de desconto (limitado a R$ 15,00). Cartão segue sem desconto. O pagamento é acertado diretamente com a loja.</p>
+      <p><strong>Entrega/retirada.</strong> A entrega está sujeita à área de cobertura e disponibilidade. Retirada pode ser combinada quando disponível.</p>
+      <p><strong>Cancelamento.</strong> Pedidos pendentes podem ser cancelados. Pedidos confirmados exigem estorno prévio pelo atendente antes do cancelamento.</p>
+      <p><strong>Atendimento.</strong> Dúvidas e mudanças são tratadas pelo WhatsApp da loja.</p>
+      <p><strong>Responsabilidades.</strong> O cliente é responsável por informar dados corretos (telefone, endereço, CEP). A loja responde pela qualidade dos produtos e pelo cumprimento do pedido confirmado.</p>
+
+      <h2>Política de Privacidade</h2>
+      <p><strong>Dados coletados.</strong> Telefone, nome, endereço (rua, número, bairro, CEP, complemento) e histórico de pedidos.</p>
+      <p><strong>Finalidade do tratamento.</strong> Identificar o cliente, agilizar futuros pedidos, calcular ranking de clientes e manter o histórico de compras.</p>
+      <p><strong>Telefone, nome e endereço.</strong> Usados para contato, entrega e emissão do pedido. Não são divulgados a terceiros.</p>
+      <p><strong>Histórico de pedidos.</strong> Mantido para acompanhamento de recorrência e atendimento.</p>
+      <p><strong>Armazenamento.</strong> Os dados ficam no Firebase (banco da aplicação) e são acessados apenas pela loja.</p>
+      <p><strong>Direitos do titular.</strong> Você pode solicitar a revisão ou remoção dos seus dados a qualquer momento pelo canal de atendimento.</p>
+      <p><strong>Canal de atendimento.</strong> WhatsApp da loja (21) 97057-9631.</p>
+      <p class="muted"><small>Texto informativo. Recomenda-se revisão jurídica antes de divulgação oficial.</small></p>
+    </ion-content>
+  </ng-template>
+</ion-modal>

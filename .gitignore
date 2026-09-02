@@ -81,4 +81,11 @@ Thumbs.db
 # Mas versionar o logo e ícones
 !src/assets/img/logo.png
 !src/assets/icon.png
-!src/assets/mock-data/
+!src/assets/mock-data/node_modules/
+dist/
+build/
+*.log
+package-lock.json
+build-output.txt
+firebase-debug.log
+functions/node_modules/
