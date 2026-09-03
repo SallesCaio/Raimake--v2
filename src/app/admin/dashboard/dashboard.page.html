@@ -143,7 +143,7 @@
     <ion-card class="grafico-card">
       <ion-card-header>
         <ion-card-title>Vendas por dia</ion-card-title>
-        <ion-segment [(ngModel)]="periodo" value="7d" class="periodo-seg">
+        <ion-segment [(ngModel)]="periodo" value="7d" class="periodo-seg" (ionChange)="onPeriodoChange()">
           <ion-segment-button value="7d"><ion-label>7d</ion-label></ion-segment-button>
           <ion-segment-button value="30d"><ion-label>30d</ion-label></ion-segment-button>
           <ion-segment-button value="mes"><ion-label>Mês</ion-label></ion-segment-button>

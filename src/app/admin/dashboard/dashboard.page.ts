@@ -111,6 +111,7 @@ export class AdminDashboardPage implements OnInit {
   acaoTipo: 'cancelar' | 'estornar' = 'cancelar';
 
   private _produtosCache: Produto[] = [];
+  private _pedidosCache: Pedido[] = [];
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -130,12 +131,13 @@ export class AdminDashboardPage implements OnInit {
     this.carregarClientes();
 
     this.pedidosStream$.pipe(take(1)).subscribe(pedidos => {
-      this.carregandoPedidos = false;
-      this.atualizarStats(pedidos);
-      this.pedidosPaginados = this.paginar(pedidos);
-      this.totalPaginas = Math.ceil(pedidos.length / 10) || 1;
-      this.gerarGraficos(pedidos);
-    });
+          this.carregandoPedidos = false;
+          this._pedidosCache = pedidos;
+          this.atualizarStats(pedidos);
+          this.pedidosPaginados = this.paginar(pedidos);
+          this.totalPaginas = Math.ceil(pedidos.length / 10) || 1;
+          this.gerarGraficos(pedidos);
+        });
 
     this.feedbacksStream$.pipe(take(1)).subscribe(feedbacks => {
       this.carregandoFeedbacks = false;
@@ -254,29 +256,46 @@ export class AdminDashboardPage implements OnInit {
   }
 
   gerarGraficos(pedidos: Pedido[]) {
-    // Vendas por período
-    const mapa: Record<string, number> = {};
-    pedidos.filter(p => p.status === 'confirmado').forEach(p => {
-      const d = parseCreatedAt(p.createdAt);
-      const key = d ? d.toISOString().slice(0, 10) : '';
-      if (key) mapa[key] = (mapa[key] || 0) + (p.totalComDesconto || 0);
-    });
-
-    const periodoDias = this.periodo === '7d' ? 7 : this.periodo === '30d' ? 30 : 30;
-    const hoje = new Date();
-    let dias: VendaPeriodo[] = [];
-    for (let i = periodoDias - 1; i >= 0; i--) {
-      const d = new Date(hoje);
-      d.setDate(d.getDate() - i);
-      const key = d.toISOString().slice(0, 10);
-      dias.push({
-        dia: d.getDate() + '/' + (d.getMonth() + 1),
-        data: d,
-        valor: mapa[key] || 0,
+      // Vendas por período
+      const mapa: Record<string, number> = {};
+      pedidos.filter(p => p.status === 'confirmado').forEach(p => {
+        const d = parseCreatedAt(p.createdAt);
+        const key = d ? d.toISOString().slice(0, 10) : '';
+        if (key) mapa[key] = (mapa[key] || 0) + (p.totalComDesconto || 0);
       });
-    }
-    this.vendasPorPeriodo = dias;
-    this.maxVendaPeriodo = Math.max(1, ...dias.map(d => d.valor));
+
+      const hoje = new Date();
+      let dias: VendaPeriodo[] = [];
+
+      if (this.periodo === 'mes') {
+        // Agrega por mês — 12 barras JAN..DEZ
+        const nomes = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+        for (let mi = 0; mi < 12; mi++) {
+          const d = new Date(hoje.getFullYear(), mi, 1);
+          const prox = new Date(hoje.getFullYear(), mi + 1, 1);
+          const chaveIni = d.toISOString().slice(0, 7);
+          let valor = 0;
+          for (const [k, v] of Object.entries(mapa)) {
+            if (k >= chaveIni && k < prox.toISOString().slice(0, 7)) valor += v;
+          }
+          dias.push({ dia: nomes[mi], data: d, valor });
+        }
+      } else {
+        const periodoDias = this.periodo === '7d' ? 7 : 30;
+        for (let i = periodoDias - 1; i >= 0; i--) {
+          const d = new Date(hoje);
+          d.setDate(d.getDate() - i);
+          const key = d.toISOString().slice(0, 10);
+          dias.push({
+            dia: d.getDate() + '/' + (d.getMonth() + 1),
+            data: d,
+            valor: mapa[key] || 0,
+          });
+        }
+      }
+
+      this.vendasPorPeriodo = dias;
+      this.maxVendaPeriodo = Math.max(1, ...dias.map(d => d.valor));
 
     // Top 5 produtos
     const produtos: Record<string, number> = {};
@@ -305,9 +324,13 @@ export class AdminDashboardPage implements OnInit {
     });
     this.produtoMaisVendido = Object.keys(porProd).sort((a, b) => porProd[b] - porProd[a])[0] || '';
     this.categoriaMaisVendida = Object.keys(porCat).sort((a, b) => porCat[b] - porCat[a])[0] || '';
-  }
+      }
 
-  selecionarDia(d: VendaPeriodo) {
+      onPeriodoChange() {
+        if (this._pedidosCache.length) this.gerarGraficos(this._pedidosCache);
+      }
+
+      selecionarDia(d: VendaPeriodo) {
     this.diaSel = d.data;
     this.pedidosStream$.pipe(map(pedidos => pedidos.filter(p => {
       if (!p.createdAt) return false;
