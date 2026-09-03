@@ -51,20 +51,20 @@ export class PedidoService {
     return ref.id;
   }
 
-  /** TRANSAÇÃO: READ → VALIDA → WRITE
-   * Confirma venda, valida estoque, atualiza estoque + caixa + status
-   */
+  /** TRANSAÇÃO: relê pedido → valida status → estoque + caixa + status */
   async confirmarVenda(id: string, valor: number): Promise<void> {
     const pedidoDoc = this.firestore.doc(`${this.COLLECTION}/${id}`);
-    const snap = await pedidoDoc.get().toPromise();
-    const pedido = snap?.data() as any;
-    if (!pedido) throw new Error('Pedido não encontrado');
-
     const hoje = new Date().toISOString().slice(0, 10);
     const caixaRef = this.firestore.doc(`caixa/${hoje}`);
     const produtosRef = this.firestore.collection('produtos');
 
     await this.firestore.firestore.runTransaction(async (t: any) => {
+      // FASE 0: relê pedido dentro da transação (atômico)
+      const snapPedido = await t.get(pedidoDoc.ref);
+      if (!snapPedido.exists) throw new Error('Pedido não encontrado');
+      const pedido = snapPedido.data() as any;
+      if (pedido.status === 'confirmado') throw new Error('Pedido já está confirmado.');
+
       // FASE 1: READS
       const itens = (pedido.produtos || []).map((item: any) => ({
         item,
@@ -97,18 +97,31 @@ export class PedidoService {
     });
   }
 
-  /** TRANSAÇÃO: reversão de estoque + caixa + status = estornado */
+  /** TRANSAÇÃO: relê pedido → valida status → reversão estoque + caixa da data ORIGINAL */
   async estornarPedido(id: string): Promise<void> {
     const pedidoDoc = this.firestore.doc(`${this.COLLECTION}/${id}`);
-    const snap = await pedidoDoc.get().toPromise();
-    const pedido = snap?.data() as any;
-    if (!pedido) throw new Error('Pedido não encontrado');
-
-    const hoje = new Date().toISOString().slice(0, 10);
-    const caixaRef = this.firestore.doc(`caixa/${hoje}`);
     const produtosRef = this.firestore.collection('produtos');
 
     await this.firestore.firestore.runTransaction(async (t: any) => {
+      // FASE 0: relê pedido dentro da transação
+      const snapPedido = await t.get(pedidoDoc.ref);
+      if (!snapPedido.exists) throw new Error('Pedido não encontrado');
+      const pedido = snapPedido.data() as any;
+      if (pedido.status !== 'confirmado') throw new Error('Somente pedidos confirmados podem ser estornados.');
+
+      // Determina o caixa pela DATA DA VENDA original
+      let keyCaixa: string;
+      if (pedido.createdAt) {
+        const d = typeof pedido.createdAt.toDate === 'function'
+          ? pedido.createdAt.toDate()
+          : new Date(pedido.createdAt);
+        if (isNaN(d.getTime())) throw new Error('Data do pedido inválida.');
+        keyCaixa = d.toISOString().slice(0, 10);
+      } else {
+        throw new Error('Pedido não possui data de criação.');
+      }
+      const caixaRef = this.firestore.doc(`caixa/${keyCaixa}`);
+
       // FASE 1: READS
       const itens = (pedido.produtos || []).map((item: any) => ({
         item,
@@ -122,8 +135,7 @@ export class PedidoService {
         if (!doc.exists) return null;
         const produto = doc.data() as Produto;
         const estoqueAtual = produto.estoque ?? 0;
-        const novoEstoque = estoqueAtual + item.qtd;
-        t.set(produtosRef.doc(item.id).ref, { estoque: novoEstoque }, { merge: true });
+        t.set(produtosRef.doc(item.id).ref, { estoque: estoqueAtual + item.qtd }, { merge: true });
         return null;
       });
       await Promise.all(promessasEstoque);

@@ -59,7 +59,6 @@ function createFirestoreStub(pedidoData: any = null) {
   const firestore: any = {
     collection: collectionHandler,
     doc: (path: string) => path.startsWith('produtos') ? prodDocHandler(path.split('/')[1]) : docHandler(path),
-    // Firestore nativo: runTransaction(async t => { t.get(ref); t.set(ref, d, opts); t.update(ref, d); })
     firestore: {
       runTransaction: async (fn: any) => {
         const t: any = {
@@ -206,7 +205,8 @@ describe('PedidoService', () => {
       id: 'P6',
       produtos: [{ id: 'p1', nome: 'Gl', preco: 50, qtd: 1, subtotal: 50 }],
       totalComDesconto: 50,
-      status: 'pendente'
+      status: 'pendente',
+      createdAt: new Date()
     };
     const { firestore, produtos, docs } = createFirestoreStub(pedido);
     produtos['p1'] = { nome: 'Gl', estoque: 5 };
@@ -228,7 +228,8 @@ describe('PedidoService', () => {
       id: 'P7',
       produtos: [{ id: 'p1', nome: 'Gl', preco: 50, qtd: 2, subtotal: 100 }],
       totalComDesconto: 100,
-      status: 'confirmado'
+      status: 'confirmado',
+      createdAt: new Date()
     };
     const { firestore, produtos, docs } = createFirestoreStub(pedido);
     produtos['p1'] = { nome: 'Gl', estoque: 3 };
@@ -243,7 +244,8 @@ describe('PedidoService', () => {
       id: 'P8',
       produtos: [{ id: 'p1', nome: 'Gl', preco: 50, qtd: 2, subtotal: 100 }],
       totalComDesconto: 100,
-      status: 'pendente'
+      status: 'pendente',
+      createdAt: new Date()
     };
     const { firestore, produtos, docs } = createFirestoreStub(pedido);
     produtos['p1'] = { nome: 'Gl', estoque: 10 };

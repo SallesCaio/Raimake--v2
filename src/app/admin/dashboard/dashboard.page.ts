@@ -121,6 +121,8 @@ export class AdminDashboardPage implements OnInit {
   }
 
   ngOnInit() {
+    this.carregarCaixaHoje();
+
     this.pedidosStream$.pipe(take(1)).subscribe(pedidos => {
       this.carregandoPedidos = false;
       this.atualizarStats(pedidos);
@@ -132,6 +134,16 @@ export class AdminDashboardPage implements OnInit {
     this.feedbacksStream$.pipe(take(1)).subscribe(() => {
       this.carregandoFeedbacks = false;
     });
+  }
+
+  async carregarCaixaHoje() {
+    const hoje = new Date().toISOString().slice(0, 10);
+    try {
+      const snap = await this.firestore.doc(`caixa/${hoje}`).get().toPromise();
+      this.caixaHoje = (snap?.exists ? (snap.data() as any)?.total : 0) || 0;
+    } catch {
+      this.caixaHoje = 0;
+    }
   }
 
   paginar(pedidos: Pedido[]): Pedido[] {
