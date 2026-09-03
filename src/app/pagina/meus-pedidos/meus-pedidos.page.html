@@ -16,7 +16,7 @@
         <ion-label>
           <h2>#{{ (p.id || '').slice(-6).toUpperCase() }} — {{ p.clienteNome }}</h2>
           <p>{{ p.produtos.length }} item(ns) | R$ {{ (p.totalComDesconto || 0).toFixed(2) }}</p>
-          <p>{{ p.createdAt | date:'medium' }}</p>
+          <p>{{ p.createdAt | firestoreDate:'medium' }}</p>
         </ion-label>
         <ion-badge slot="end" [color]="p.status === 'confirmado' ? 'success' : (p.status === 'cancelado' ? 'danger' : 'warning')">
           {{ p.status }}

@@ -9,6 +9,7 @@ import { AdminProdutosPage } from './produtos/produtos.page';
 import { AdminProdutoFormPage } from './produto-form/produto-form.page';
 import { PedidoService } from '../services/pedido.service';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { PipesModule } from '../pipes/pipes.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { AngularFireStorageModule } from '@angular/fire/compat/storage';
     ReactiveFormsModule,
     IonicModule,
     AdminRoutingModule,
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    PipesModule
   ],
   declarations: [
     AdminLoginPage,

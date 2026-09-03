@@ -5,6 +5,8 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { PedidoService, Pedido } from '../../services/pedido.service';
+import { Produto } from '../../services/firebase.service';
+import { Cliente } from '../../services/cliente.service';
 
 /** Converte valor de createdAt do Firestore (Date | Timestamp | number | null) para Date legítimo. */
 function parseCreatedAt(v: any): Date | null {
@@ -80,7 +82,7 @@ export class AdminDashboardPage implements OnInit {
   produtoMaisVendido = '';
   categoriaMaisVendida = '';
   totalClientes = 0;
-  maiorClienteValor = 0;
+  maiorClienteValor: string | number = 0;
 
   // Gráficos
   vendasPorPeriodo: VendaPeriodo[] = [];
@@ -108,6 +110,8 @@ export class AdminDashboardPage implements OnInit {
   acaoExecutando = false;
   acaoTipo: 'cancelar' | 'estornar' = 'cancelar';
 
+  private _produtosCache: Produto[] = [];
+
   constructor(
     private afAuth: AngularFireAuth,
     private firestore: AngularFirestore,
@@ -122,6 +126,8 @@ export class AdminDashboardPage implements OnInit {
 
   ngOnInit() {
     this.carregarCaixaHoje();
+    this.carregarProdutos();
+    this.carregarClientes();
 
     this.pedidosStream$.pipe(take(1)).subscribe(pedidos => {
       this.carregandoPedidos = false;
@@ -131,8 +137,10 @@ export class AdminDashboardPage implements OnInit {
       this.gerarGraficos(pedidos);
     });
 
-    this.feedbacksStream$.pipe(take(1)).subscribe(() => {
+    this.feedbacksStream$.pipe(take(1)).subscribe(feedbacks => {
       this.carregandoFeedbacks = false;
+      const fs = (feedbacks || []) as any[];
+      this.notaMedia = fs.length ? fs.reduce((s: number, f: any) => s + (f.nota || 0), 0) / fs.length : 0;
     });
   }
 
@@ -143,6 +151,38 @@ export class AdminDashboardPage implements OnInit {
       this.caixaHoje = (snap?.exists ? (snap.data() as any)?.total : 0) || 0;
     } catch {
       this.caixaHoje = 0;
+    }
+  }
+
+  async carregarProdutos() {
+    try {
+      const snap = await this.firestore.collection('produtos', ref => ref.where('ativo', '==', true)).get().toPromise();
+      const p = (snap?.docs?.map((d: any) => d.data()) as Produto[]) || [];
+      this.produtosAtivos = p.length;
+      this.estoqueBaixo = p.filter(x => x.estoque !== undefined && x.estoque > 0 && x.estoque <= 5).length;
+      this.semEstoque = p.filter(x => x.estoque !== undefined && x.estoque <= 0).length;
+      this._produtosCache = p;
+    } catch {
+      this.produtosAtivos = 0;
+      this.estoqueBaixo = 0;
+      this.semEstoque = 0;
+    }
+  }
+
+  async carregarClientes() {
+    try {
+      const snap = await this.firestore.collection('clientes', ref => ref.orderBy('valorTotal', 'desc')).get().toPromise();
+      const c = (snap?.docs?.map((d: any) => ({ ...d.data(), telefone: d.id })) as Cliente[]) || [];
+      this.totalClientes = c.length;
+      this.clientesNovos = c.filter(x => (x.totalPedidos || 0) <= 1).length;
+      this.clientesRecorrentes = c.filter(x => (x.totalPedidos || 0) > 1).length;
+      const top = c.slice().sort((a, b) => (b.valorTotal || 0) - (a.valorTotal || 0))[0];
+      this.maiorClienteValor = top ? (top.nome || top.telefone) : 0;
+    } catch {
+      this.totalClientes = 0;
+      this.clientesNovos = 0;
+      this.clientesRecorrentes = 0;
+      this.maiorClienteValor = 0;
     }
   }
 
@@ -210,7 +250,7 @@ export class AdminDashboardPage implements OnInit {
     ];
     this.maxStatus = Math.max(1, ...this.pedidosPorStatus.map(s => s.count));
 
-    this.descontosConcedidos = pedidos.reduce((s, p) => s + (p.desconto || 0), 0);
+    this.descontosConcedidos = confirmados.reduce((s, p) => s + (p.desconto || 0), 0);
   }
 
   gerarGraficos(pedidos: Pedido[]) {
@@ -250,6 +290,21 @@ export class AdminDashboardPage implements OnInit {
       .slice(0, 5)
       .map(([nome, qtd]) => ({ nome, qtd }));
     this.maxTop5 = Math.max(1, ...this.top5Produtos.map(p => p.qtd));
+
+    // Produto e categoria mais vendidos
+    const mapCat: Record<string, string> = {};
+    for (const pr of this._produtosCache) mapCat[pr.nome] = pr.categoria || '';
+    const porProd: Record<string, number> = {};
+    const porCat: Record<string, number> = {};
+    pedidos.filter(p => p.status === 'confirmado').forEach(p => {
+      p.produtos?.forEach((item: any) => {
+        porProd[item.nome] = (porProd[item.nome] || 0) + item.qtd;
+        const cat = mapCat[item.nome];
+        if (cat) porCat[cat] = (porCat[cat] || 0) + item.qtd;
+      });
+    });
+    this.produtoMaisVendido = Object.keys(porProd).sort((a, b) => porProd[b] - porProd[a])[0] || '';
+    this.categoriaMaisVendida = Object.keys(porCat).sort((a, b) => porCat[b] - porCat[a])[0] || '';
   }
 
   selecionarDia(d: VendaPeriodo) {

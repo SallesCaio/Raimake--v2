@@ -6,6 +6,7 @@ import { MeusPedidosPageRoutingModule } from './meus-pedidos-routing.module';
 import { MeusPedidosPage } from './meus-pedidos.page';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { BottomNavComponent } from '../../shared/components/bottom-nav/bottom-nav.component';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { BottomNavComponent } from '../../shared/components/bottom-nav/bottom-na
     MeusPedidosPageRoutingModule,
     HeaderComponent,
     BottomNavComponent,
-    MeusPedidosPage
+    MeusPedidosPage,
+    PipesModule
   ],
   schemas: [NO_ERRORS_SCHEMA]
 })

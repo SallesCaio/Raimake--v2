@@ -229,7 +229,7 @@
           <div class="pedido-topo">
             <div>
               <h2>#{{ (p.id || '').slice(-6).toUpperCase() }}</h2>
-              <p class="muted">{{ p.createdAt | date:'medium' }}</p>
+              <p class="muted">{{ p.createdAt | firestoreDate:'medium' }}</p>
             </div>
             <ion-badge [color]="p.status === 'confirmado' ? 'success' : 'warning'">{{ p.status }}</ion-badge>
           </div>
@@ -370,7 +370,7 @@
             <p class="muted">{{ f.clienteTelefone }}</p>
           </div>
           <p class="feedback-comentario">{{ f.comentario || '—' }}</p>
-          <p class="muted"><small>{{ f.createdAt | date:'short' }}</small></p>
+          <p class="muted"><small>{{ f.createdAt | firestoreDate:'short' }}</small></p>
         </ion-card-content>
       </ion-card>
       <p *ngIf="feedbacks.length === 0" class="ion-text-center ion-padding muted">Nenhum feedback registrado ainda.</p>
