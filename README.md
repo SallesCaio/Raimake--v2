@@ -81,10 +81,3 @@ Firebase:
 Vercel
 
 **Produção:** `https://byraimakes.com.br`
-
-## Desenvolvimento
-
-Instalar dependências:
-
-```bash
-npm install
