@@ -243,10 +243,10 @@
             <ion-note slot="end">R$ {{ (i.subtotal || (i.preco * i.qtd)).toFixed(2) }}</ion-note>
           </ion-item>
           <div class="pedido-acoes">
-            <ion-button size="small" color="success" *ngIf="p.status !== 'confirmado'"
-              (click)="abrirConfirmarVenda(p)">
-              Confirmar Venda
-            </ion-button>
+            <ion-button size="small" color="success" *ngIf="p.status === 'pendente'"
+                          (click)="abrirConfirmarVenda(p)">
+                          Confirmar Venda
+                        </ion-button>
             <ion-button size="small" fill="clear" color="danger" (click)="confirmarCancelar(p)" *ngIf="p.status === 'pendente'">
               Cancelar
             </ion-button>

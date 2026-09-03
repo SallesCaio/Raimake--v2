@@ -190,11 +190,17 @@ export class AdminDashboardPage implements OnInit {
       const c = parseCreatedAt(p.createdAt);
       return c ? c >= mes : false;
     });
-    this.vendasMes = doMes.reduce((s, p) => s + (p.totalComDesconto || 0), 0);
+    this.vendasMes = doMes.filter(p => p.status === 'confirmado').reduce((s, p) => s + (p.totalComDesconto || 0), 0);
 
-    this.receitaTotal = pedidos.reduce((s, p) => s + (p.totalComDesconto || 0), 0);
-    this.maiorVenda = Math.max(0, ...(pedidos.map(p => p.totalComDesconto || 0)));
+    const confirmados = pedidos.filter(p => p.status === 'confirmado');
+    this.receitaTotal = confirmados.reduce((s, p) => s + (p.totalComDesconto || 0), 0);
+    this.maiorVenda = confirmados.length > 0 ? Math.max(0, ...(confirmados.map(p => p.totalComDesconto || 0))) : 0;
     this.ticketMedio = this.pedidosConfirmados > 0 ? this.receitaTotal / this.pedidosConfirmados : 0;
+
+    // Por modalidade
+    this.caixaPix = confirmados.filter(p => p.formaPagamento === 'Pix').reduce((s, p) => s + (p.totalComDesconto || 0), 0);
+    this.caixaDinheiro = confirmados.filter(p => p.formaPagamento === 'Dinheiro').reduce((s, p) => s + (p.totalComDesconto || 0), 0);
+    this.caixaCartao = confirmados.filter(p => p.formaPagamento === 'Cartão').reduce((s, p) => s + (p.totalComDesconto || 0), 0);
 
     this.pedidosPorStatus = [
       { status: 'pendente', count: this.pedidosPendentes },
