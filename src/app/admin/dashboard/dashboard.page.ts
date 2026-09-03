@@ -6,6 +6,15 @@ import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { PedidoService, Pedido } from '../../services/pedido.service';
 
+/** Converte valor de createdAt do Firestore (Date | Timestamp | number | null) para Date legítimo. */
+function parseCreatedAt(v: any): Date | null {
+  if (!v) return null;
+  if (v instanceof Date) return v;
+  if (typeof v === 'number') return new Date(v);
+  if (typeof v.toDate === 'function') return v.toDate();
+  return null;
+}
+
 interface VendaPeriodo {
   dia: string;
   data: Date;
@@ -156,7 +165,8 @@ export class AdminDashboardPage implements OnInit {
     hoje.setHours(0, 0, 0, 0);
     const confirmadosHoje = pedidos.filter(p => {
       if (!p.createdAt) return false;
-      const c = new Date(p.createdAt);
+      const c = parseCreatedAt(p.createdAt);
+      if (!c) return false;
       return c >= hoje && p.status === 'confirmado';
     });
     this.vendasHoje = confirmadosHoje.reduce((s, p) => s + (p.totalComDesconto || 0), 0);
@@ -164,7 +174,10 @@ export class AdminDashboardPage implements OnInit {
     const mes = new Date();
     mes.setDate(1);
     mes.setHours(0, 0, 0, 0);
-    const doMes = pedidos.filter(p => p.createdAt && new Date(p.createdAt) >= mes);
+    const doMes = pedidos.filter(p => {
+      const c = parseCreatedAt(p.createdAt);
+      return c ? c >= mes : false;
+    });
     this.vendasMes = doMes.reduce((s, p) => s + (p.totalComDesconto || 0), 0);
 
     this.receitaTotal = pedidos.reduce((s, p) => s + (p.totalComDesconto || 0), 0);
@@ -186,8 +199,9 @@ export class AdminDashboardPage implements OnInit {
     // Vendas por período
     const mapa: Record<string, number> = {};
     pedidos.filter(p => p.status === 'confirmado').forEach(p => {
-      const d = p.createdAt ? new Date(p.createdAt).toISOString().slice(0, 10) : '';
-      if (d) mapa[d] = (mapa[d] || 0) + (p.totalComDesconto || 0);
+      const d = parseCreatedAt(p.createdAt);
+      const key = d ? d.toISOString().slice(0, 10) : '';
+      if (key) mapa[key] = (mapa[key] || 0) + (p.totalComDesconto || 0);
     });
 
     const periodoDias = this.periodo === '7d' ? 7 : this.periodo === '30d' ? 30 : 30;
@@ -224,7 +238,10 @@ export class AdminDashboardPage implements OnInit {
     this.diaSel = d.data;
     this.pedidosStream$.pipe(map(pedidos => pedidos.filter(p => {
       if (!p.createdAt) return false;
-      return new Date(p.createdAt).toISOString().slice(0, 10) === d.data.toISOString().slice(0, 10);
+      const c = parseCreatedAt(p.createdAt);
+      if (!c) return false;
+      const key = c.toISOString().slice(0, 10);
+      return key === d.data.toISOString().slice(0, 10);
     }))).subscribe(pedidos => {
       this.pedidosDoDiaSel = pedidos;
       this.totalDoDiaSel = pedidos.reduce((s, p) => s + (p.totalComDesconto || 0), 0);

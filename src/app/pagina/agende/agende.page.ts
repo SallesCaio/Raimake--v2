@@ -356,7 +356,7 @@ _Consulte disponibilidade e area de entrega_`;
         pedidoId: this.pedidoFinalizadoId,
         clienteTelefone: this.feedbackTelefone || this.clienteService.normalizarTelefone(this.clienteTelefone),
         nota: this.feedbackNota,
-        comentario: this.feedbackTexto.trim() || undefined
+        comentario: this.feedbackTexto.trim() || '',
       });
     } catch (e) {
       console.error('Erro ao salvar feedback', e);
